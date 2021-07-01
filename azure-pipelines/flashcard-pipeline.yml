@@ -84,6 +84,12 @@ stages:
 
   - job: BuildPushDocker
     steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'flashcard-service'
+        itemPattern: '**.jar'
+        targetPath: './dockerize/'
     - task: Docker@2
       inputs:
         containerRegistry: 'team4-docker-containers'
