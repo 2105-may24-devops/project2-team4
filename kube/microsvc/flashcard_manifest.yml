@@ -4,6 +4,9 @@ metadata:
   name: flashcard-deploy
   namespace: p2t4
 spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       stack: backend
@@ -26,12 +29,14 @@ spec:
         volumeMounts: [] # Placeholder
         env:
         - name: spring.kafka.consumer.bootstrap-servers
-          value: kafka:9092 # TODO: placeholder
+          value: kafka-svc.p2t4:9092 # TODO: placeholder
         - name: spring.kafka.producer.bootstrap-servers
-          value: kafka:9092 # TODO: placeholder
-        # Other env values: 
-        #    database (volume mounts?)
-        #    consul (use ConfigMap)
+          value: kafka-svc.p2t4:9092 # TODO: placeholder
+        envFrom:
+        - configMapRef:
+            name: consul-connection
+        - configMapRef:
+            name: db-info
       volumes: [] # Placeholder
 
 ---
@@ -47,3 +52,4 @@ spec:
     app: flashcard
   ports:
   - port: 8089
+    name: fc-port

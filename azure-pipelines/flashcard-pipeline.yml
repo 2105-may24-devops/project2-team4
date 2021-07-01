@@ -1,5 +1,6 @@
 # This pipeline will handle the CI/CD of a Flashcard Microservice associated with the project found:
 # https://github.com/2105-may24-devops/project2-quiz-app
+
 trigger:
   branches:
     include:
@@ -17,6 +18,7 @@ trigger:
 
 #variables:
 
+
 stages:
 
 # Continuous Integration - SonarCloud Analysis and Dockerization
@@ -29,7 +31,7 @@ stages:
     steps:
     - task: SonarCloudPrepare@1
       inputs:
-        SonarCloud: 'sonar-cloud'
+        SonarCloud: 'SonarCloud-flashcard'
         organization: '2105-may24-devops'
         scannerMode: 'Other'
     - task: Maven@3
@@ -46,11 +48,15 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: true
         sqMavenPluginVersionChoice: 'latest'
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
 
 - stage: DockerBuild
   displayName: Containerize Flashcard Microservice
+  dependsOn: StaticAnalysis
   jobs:
-  - job: Build-Push-Azure
+  - job: BuildPushAzure
     steps:
     - task: Docker@2
       inputs:
@@ -58,8 +64,9 @@ stages:
         repository: 'team4containers'
         command: 'buildAndPush'
         Dockerfile: 'dockerize/flashcard.Dockerfile'
+        tags: 'latest'
 
-  - job: Build-Push-Docker
+  - job: BuildPushDocker
     steps:
     - task: Docker@2
       inputs:
@@ -70,23 +77,23 @@ stages:
         tags: 'latest'
 
 
-# Continuous Deployment - Kubernetes
-- stage: DeployTest
-  displayName: Deploy to Team 4 K8s cluster.
-  jobs:
-  - job: getimage
-    displayName: Download Latest Image
-    steps:
-    - task: KubernetesManifest@0
-      inputs:
-        action: 'deploy'
+# # Continuous Deployment - Kubernetes
+# - stage: DeployTest
+#   displayName: Deploy to Team 4 K8s cluster.
+#   jobs:
+#   - job: getimage
+#     displayName: Download Latest Image
+#     steps:
+#     - task: KubernetesManifest@0
+#       inputs:
+#         action: 'deploy'
 
-- stage: DeployProduction
-  displayName: Deploy to Trainer Cluster.
-  jobs:
-  - job: getimage
-    displayName: Download Latest Image
-    steps:
-    - task: KubernetesManifest@0
-      inputs:
-        action: 'deploy'
+# - stage: DeployProduction
+#   displayName: Deploy to Trainer Cluster.
+#   jobs:
+#   - job: getimage
+#     displayName: Download Latest Image
+#     steps:
+#     - task: KubernetesManifest@0
+#       inputs:
+#         action: 'deploy'
