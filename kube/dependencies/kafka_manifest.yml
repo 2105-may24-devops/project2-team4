@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment # maybe kafka should be stateful in case of interruption of messaging
+metadata:
+  name: kafka-deploy
+  namespace: p2t4 # in theory, this is inadvisable to put here, use kubectl
+spec:
+  selector:
+    stack: dependency
+    app: kafka
+  template:
+    metadata:
+      labels:
+        stack: dependency
+        app: kafka
+    spec:
+      initContainers:
+      - name: blah #TODO:
+      containers:
+      - name: kafka
+        image: bitnami/kafka
+        ports:
+        - containerPort: 9092
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "100m"
+        env:
+        - name: ALLOW_PLAINTEXT_LISTENER
+          value: "yes"
+        - name: KAFKA_CFG_ZOOKEEPER_CONNECT
+          value: localhost:2181 #TODO: change the hostname
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-svc
+  namespace: p2t4
+spec:
+  selector:
+    stack: dependency
+    app: kafka
+  type: ClusterIP
+  ports:
+    - 9092
+    

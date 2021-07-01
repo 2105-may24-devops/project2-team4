@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flashcard-deploy
+  namespace: p2t4
+spec:
+  selector:
+    matchLabels:
+      stack: backend
+      app: flashcard
+  template:
+    metadata:
+      labels:
+        stack: backend
+        app: flashcard
+    spec:
+      containers:
+      - name: flashcard
+        image: <Image> # TODO: Placeholder
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        ports:
+        - containerPort: 8089
+        volumeMounts: [] # Placeholder
+        env:
+        - name: spring.kafka.consumer.bootstrap-servers
+          value: kafka:9092 # TODO: placeholder
+        - name: spring.kafka.producer.bootstrap-servers
+          value: kafka:9092 # TODO: placeholder
+        # Other env values: 
+        #    database (volume mounts?)
+        #    consul (use ConfigMap)
+      volumes: [] # Placeholder
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flashcard-svc
+  namespace: p2t4
+spec:
+  type: ClusterIP
+  selector:
+    stack: backend
+    app: flashcard
+  ports:
+  - port: 8089

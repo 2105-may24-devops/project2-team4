@@ -1,15 +1,21 @@
 # This pipeline will handle the CI/CD of a Flashcard Microservice associated with the project found:
 # https://github.com/2105-may24-devops/project2-quiz-app
-
-
 trigger:
-- master
+  branches:
+    include:
+    - master
 
-resources:
-- repo: https://github.com/2105-may24-devops/project2-team4.git
+  paths:
+    include:
+    - flashcard-service
+    exclude:
+    - quiz-service
+    - README.md
 
-variables:
+# resources:
+# - repo: "https://github.com/2105-may24-devops/project2-team4.git"
 
+#variables:
 
 stages:
 
@@ -18,12 +24,68 @@ stages:
 - stage: StaticAnalysis
   displayName: Analysis of Flashcard Microservice with SonarCloud
 
+  jobs:
+  - job: PrepareScan
+    steps:
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'sonar-cloud'
+        organization: '2105-may24-devops'
+        scannerMode: 'Other'
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'flashcard-service/pom.xml'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        codeCoverageToolOption: 'JaCoCo'
+        codeCoverageRestoreOriginalPomXml: true
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: true
+        sqMavenPluginVersionChoice: 'latest'
+
 - stage: DockerBuild
   displayName: Containerize Flashcard Microservice
+  jobs:
+  - job: Build-Push-Azure
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'team4-azure-containers'
+        repository: 'team4containers'
+        command: 'buildAndPush'
+        Dockerfile: 'dockerize/flashcard.Dockerfile'
+
+  - job: Build-Push-Docker
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'team4-docker-containers'
+        repository: 'iamjarvi/project2-team4'
+        command: 'buildAndPush'
+        Dockerfile: 'dockerize/flashcard.Dockerfile'
+        tags: 'latest'
+
 
 # Continuous Deployment - Kubernetes
 - stage: DeployTest
   displayName: Deploy to Team 4 K8s cluster.
+  jobs:
+  - job: getimage
+    displayName: Download Latest Image
+    steps:
+    - task: KubernetesManifest@0
+      inputs:
+        action: 'deploy'
 
 - stage: DeployProduction
   displayName: Deploy to Trainer Cluster.
+  jobs:
+  - job: getimage
+    displayName: Download Latest Image
+    steps:
+    - task: KubernetesManifest@0
+      inputs:
+        action: 'deploy'

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quiz-deploy
+  namespace: p2t4
+spec:
+  selector:
+    matchLabels:
+      stack: backend
+      app: quiz
+  template:
+    metadata:
+      labels:
+        stack: backend
+        app: quiz
+    spec:
+      containers:
+      - name: quiz
+        image: <Image> # TODO: Placeholder
+        resources:
+          limits:
+            memory: "1.5Gi"
+            cpu: "1000m"
+        ports:
+        - containerPort: 8090
+        volumeMounts: [] # Placeholder
+        env: []
+        # Other env values: 
+        #    database (volume mounts?)
+        #    consul (use ConfigMap)
+      volumes: [] # Placeholder
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quiz-svc
+  namespace: p2t4
+spec:
+  type: ClusterIP
+  selector:
+    stack: backend
+    app: quiz
+  ports:
+  - port: 8090
