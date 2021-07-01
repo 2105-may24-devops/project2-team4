@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deploy
+  namespace: p2t4
+spec:
+  selector:
+    matchLabels:
+      stack: backend
+      app: gateway
+  template:
+    metadata:
+      labels:
+        stack: backend
+        app: gateway
+    spec:
+      containers:
+      - name: gateway
+        image: <Image> # TODO: Placeholder
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        env: []
+        # Other env values: 
+        #    consul (use ConfigMap)
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-svc
+  namespace: p2t4
+spec:
+  type: LoadBalancer #to expose to outside the cluster easier in AKS
+  selector:
+    stack: backend
+    app: gateway
+  ports:
+  - port: 8080
