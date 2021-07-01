@@ -1,6 +1,5 @@
 # This pipeline will handle the CI/CD of a Flashcard Microservice associated with the project found:
 # https://github.com/2105-may24-devops/project2-quiz-app
-
 trigger:
   branches:
     include:
@@ -18,13 +17,13 @@ trigger:
 
 #variables:
 
-
 stages:
 
 # Continuous Integration - SonarCloud Analysis and Dockerization
 
 - stage: StaticAnalysis
   displayName: Analysis of Flashcard Microservice with SonarCloud
+
   jobs:
   - job: PrepareScan
     steps:
