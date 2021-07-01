@@ -9,7 +9,7 @@ node("master") {
         println "${currentBuild.changeSets}, ${currentBuild.changeSets.getClass()}"
         def list = currentBuild.changeSets
         for (int i=0; i < list.size(); i++) {
-            println "${list[i]}"
+            println "${list[i]}, ${list[i].getClass()}"
         }
     }
 }
