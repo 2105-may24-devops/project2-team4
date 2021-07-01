@@ -14,6 +14,9 @@ node("master") {
             while (change_iterator.hasNext()) {
                 def item = change_iterator.next()
                 println "${item}, ${item.getClass()}"
+                for (String paths : item.getAffectedPaths()) {
+                    println paths
+                }
             }
         }
     }
