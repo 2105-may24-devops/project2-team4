@@ -43,3 +43,4 @@ spec:
     app: quiz
   ports:
   - port: 8090
+    name: quiz-port

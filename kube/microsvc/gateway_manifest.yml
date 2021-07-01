@@ -40,3 +40,4 @@ spec:
     app: gateway
   ports:
   - port: 8080
+    name: entrypoint

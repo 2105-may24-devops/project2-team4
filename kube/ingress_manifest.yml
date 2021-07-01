@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myingress
+  namespace: p2t4
+  labels:
+    name: myingress
+spec:
+  defaultBackend:
+    service:
+      name: gateway-svc
+      port:
+        name: entrypoint
+  rules:
+  - host: <Host> #Placeholder. Dunno what to put
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/flashcard"
+        backend:
+          service:
+            name: flashcard-svc
+            port: 
+              number: fc-port
+      - pathType: Prefix
+        path: "/quiz"
+        backend:
+          service:
+            name: quiz-svc
+            port: 
+              number: quiz-port

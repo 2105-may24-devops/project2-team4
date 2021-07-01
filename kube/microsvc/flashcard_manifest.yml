@@ -47,3 +47,4 @@ spec:
     app: flashcard
   ports:
   - port: 8089
+    name: fc-port
