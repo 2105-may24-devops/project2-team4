@@ -6,14 +6,10 @@ node("master") {
         checkout scm
         sh "ls"
         def services = []
-        println "${currentBuild.changeSets}"
-        def change = currentBuild.changeSets
-        for (int i = 0; i < change.size(); i++) {
-            println "${change[i].items.getPaths()}"
-            def paths = change[i].getPaths()
-            for (String path : paths) {
-                println "${path}"
-            }
+        println "${currentBuild.changeSets.getAffectedPaths()}"
+        def change = currentBuild.changeSets.getAffectedPaths()
+        for (String path : change) {
+            println "${path}"
         }
     }
 }
