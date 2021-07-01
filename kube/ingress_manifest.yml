@@ -12,8 +12,8 @@ spec:
       port:
         name: entrypoint
   rules:
-  - host: <Host> #Placeholder. Dunno what to put
-    http:
+    # host: <Host> #Placeholder. Dunno what to put. may be optional.
+  - http:
       paths:
       - pathType: Prefix
         path: "/flashcard"
