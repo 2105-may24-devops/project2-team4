@@ -10,7 +10,7 @@ node("master") {
         def list = currentBuild.changeSets
         for (int i=0; i < list.size(); i++) {
             println "${list[i]}, ${list[i].getClass()}"
-            list[i].forEach(item -> println "${item}, ${item.getClass()}")
+            list[i].forEach(println "${item}, ${item.getClass()}")
         }
     }
 }
