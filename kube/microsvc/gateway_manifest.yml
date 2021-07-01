@@ -24,8 +24,9 @@ spec:
         ports:
         - containerPort: 8080
         env: []
-        # Other env values: 
-        #    consul (use ConfigMap)
+        envFrom:
+        - configMapRef:
+            name: consul-connection
 
 ---
 apiVersion: v1
@@ -40,3 +41,4 @@ spec:
     app: gateway
   ports:
   - port: 8080
+    name: entrypoint

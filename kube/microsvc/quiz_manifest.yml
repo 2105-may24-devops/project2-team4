@@ -25,9 +25,13 @@ spec:
         - containerPort: 8090
         volumeMounts: [] # Placeholder
         env: []
+        envFrom:
+        - configMapRef:
+            name: consul-connection
+        - configMapRef:
+            name: db-info
         # Other env values: 
         #    database (volume mounts?)
-        #    consul (use ConfigMap)
       volumes: [] # Placeholder
 
 ---
@@ -43,3 +47,4 @@ spec:
     app: quiz
   ports:
   - port: 8090
+    name: quiz-port
