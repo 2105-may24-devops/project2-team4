@@ -4,11 +4,29 @@ services:
     build:
       context: .
       dockerfile: flashcard.Dockerfile
+    ports:
+      - 8089:8089
   quiz:
     build:
       context: .
       dockerfile: quiz.Dockerfile
+    ports:
+      - 8090:8090
   gateway:
     build:
       context: .
       dockerfile: gateway.Dockerfile
+    ports:
+      - 5000:8080
+  consul:
+    image: consul
+    ports:
+      - 8500:8500
+  zookeeper:
+    image: bitnami/zookeeper
+    ports:
+      - 2181:2181
+  kafka:
+    image: bitnami/kafka
+    ports:
+      - 9092:9092
