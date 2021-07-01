@@ -5,5 +5,7 @@ node("master") {
         sh "echo $BRANCH_NAME"
         checkout scm
         sh "ls"
+        def services = []
+        println "${currentBuild.changeSets}"
     }
 }
