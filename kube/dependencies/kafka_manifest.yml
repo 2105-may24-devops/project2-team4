@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment # maybe kafka should be stateful in case of interruption of messaging
 metadata:
   name: kafka-deploy
-  namespace: p2t4 # in theory, this is inadvisable to put here, use kubectl
+  namespace: p2t4 # in theory, this is inadvisable to put here, use "kubectl -n p2t4 apply -f manifest.yml"
 spec:
   selector:
     stack: dependency
