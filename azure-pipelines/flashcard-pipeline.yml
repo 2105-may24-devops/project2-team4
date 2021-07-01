@@ -1,5 +1,6 @@
 # This pipeline will handle the CI/CD of a Flashcard Microservice associated with the project found:
 # https://github.com/2105-may24-devops/project2-quiz-app
+
 trigger:
   branches:
     include:
@@ -16,6 +17,7 @@ trigger:
 # - repo: "https://github.com/2105-may24-devops/project2-team4.git"
 
 #variables:
+
 
 stages:
 
@@ -45,9 +47,13 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: true
         sqMavenPluginVersionChoice: 'latest'
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
 
 - stage: DockerBuild
   displayName: Containerize Flashcard Microservice
+  dependsOn: StaticAnalysis
   jobs:
   - job: Build-Push-Azure
     steps:
@@ -57,6 +63,7 @@ stages:
         repository: 'team4containers'
         command: 'buildAndPush'
         Dockerfile: 'dockerize/flashcard.Dockerfile'
+        tags: 'latest'
 
   - job: Build-Push-Docker
     steps:
@@ -69,23 +76,23 @@ stages:
         tags: 'latest'
 
 
-# Continuous Deployment - Kubernetes
-- stage: DeployTest
-  displayName: Deploy to Team 4 K8s cluster.
-  jobs:
-  - job: getimage
-    displayName: Download Latest Image
-    steps:
-    - task: KubernetesManifest@0
-      inputs:
-        action: 'deploy'
+# # Continuous Deployment - Kubernetes
+# - stage: DeployTest
+#   displayName: Deploy to Team 4 K8s cluster.
+#   jobs:
+#   - job: getimage
+#     displayName: Download Latest Image
+#     steps:
+#     - task: KubernetesManifest@0
+#       inputs:
+#         action: 'deploy'
 
-- stage: DeployProduction
-  displayName: Deploy to Trainer Cluster.
-  jobs:
-  - job: getimage
-    displayName: Download Latest Image
-    steps:
-    - task: KubernetesManifest@0
-      inputs:
-        action: 'deploy'
+# - stage: DeployProduction
+#   displayName: Deploy to Trainer Cluster.
+#   jobs:
+#   - job: getimage
+#     displayName: Download Latest Image
+#     steps:
+#     - task: KubernetesManifest@0
+#       inputs:
+#         action: 'deploy'
