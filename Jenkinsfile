@@ -1,11 +1,12 @@
 node("master") {
+    def stagesToRun = [:]
     stage("stage 1") {
         println "hello"
         sh "ls"
         sh "echo $BRANCH_NAME"
         checkout scm
         sh "ls"
-        def services = []
+        def changedServices = ["flashcard-service", "gateway-service", "quiz-service", "dockerize"]
         println "${currentBuild.changeSets}, ${currentBuild.changeSets.getClass()}"
         def list = currentBuild.changeSets
         for (int i=0; i < list.size(); i++) {
