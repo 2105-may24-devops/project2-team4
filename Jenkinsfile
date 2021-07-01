@@ -7,5 +7,9 @@ node("master") {
         sh "ls"
         def services = []
         println "${currentBuild.changeSets}"
+        def change = currentBuild.changeSets
+        for (int i = 0; i < change.size(); i++) {
+            println "${change[i].items}"
+        }
     }
 }
