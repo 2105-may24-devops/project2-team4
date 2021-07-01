@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: consulConnection
+  name: consul-connection
   namespace: p2t4
 data:
-  spring.cloud.consul.host: consul # Placeholder
+  spring.cloud.consul.host: consul-svc
   spring.cloud.consul.port: "8500"
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: Datab
+  name: db-info
   namespace: p2t4
 data: # may not need ALL of it, some if it should be secret
   # Database Credentials

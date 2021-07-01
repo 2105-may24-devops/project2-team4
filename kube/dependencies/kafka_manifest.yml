@@ -28,7 +28,7 @@ spec:
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"
         - name: KAFKA_CFG_ZOOKEEPER_CONNECT
-          value: localhost:2181 #TODO: change the hostname
+          value: zookeeper-svc:2181 #TODO: change the hostname
 ---
 apiVersion: v1
 kind: Service

@@ -24,6 +24,9 @@ spec:
         ports:
         - containerPort: 8080
         env: []
+        envFrom:
+        - configMapRef:
+            name: consul-connection
         # Other env values: 
         #    consul (use ConfigMap)
 

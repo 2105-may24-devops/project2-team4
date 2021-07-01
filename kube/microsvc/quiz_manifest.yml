@@ -25,6 +25,11 @@ spec:
         - containerPort: 8090
         volumeMounts: [] # Placeholder
         env: []
+        envFrom:
+        - configMapRef:
+            name: consul-connection
+        - configMapRef:
+            name: db-info
         # Other env values: 
         #    database (volume mounts?)
         #    consul (use ConfigMap)
