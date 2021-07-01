@@ -37,6 +37,7 @@ stages:
     - task: Maven@3
       inputs:
         mavenPomFile: 'flashcard-service/pom.xml'
+        options: '-f /flashcard-service/pom.xml'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         codeCoverageToolOption: 'JaCoCo'
@@ -47,10 +48,16 @@ stages:
         mavenAuthenticateFeed: false
         effectivePomSkip: false
         sonarQubeRunAnalysis: true
+        isJacocoCoverageReportXML: true
         sqMavenPluginVersionChoice: 'latest'
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Pipeline.Workspace)/dockerize/'
+        artifact: 'flashcard-service-jar'
+        publishLocation: 'pipeline'
 
 - stage: DockerBuild
   displayName: Containerize Flashcard Microservice
@@ -58,6 +65,13 @@ stages:
   jobs:
   - job: BuildPushAzure
     steps:
+
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'flashcard-service-jar'
+        itemPattern: '**.jar'
+        targetPath: '$(Pipeline.Workspace)/dockerize/'
     - task: Docker@2
       inputs:
         containerRegistry: 'team4-azure-containers'
