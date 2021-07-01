@@ -32,7 +32,6 @@ spec:
             name: db-info
         # Other env values: 
         #    database (volume mounts?)
-        #    consul (use ConfigMap)
       volumes: [] # Placeholder
 
 ---

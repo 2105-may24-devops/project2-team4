@@ -11,5 +11,7 @@ The secret files will need to be created using the `kubectl create secret` comma
 ## TODO List
 - Some of the deployments need to become stateful sets (flashcard, kafka, zookeeper, maybe consul)
 - Pod dependencies could maybe be solved with [initContainers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+- Database persistence - add volumes, but where is the in-file database? (kubectl exec)
+- Change some of the db connection info into secrets
 - Optional: Use Ingress to replace the gateway microsvc
 - Optional: Add security policy stuff

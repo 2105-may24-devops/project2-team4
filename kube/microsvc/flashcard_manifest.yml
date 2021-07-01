@@ -35,8 +35,8 @@ spec:
         envFrom:
         - configMapRef:
             name: consul-connection
-        # Other env values: 
-        #    database (volume mounts?)
+        - configMapRef:
+            name: db-info
       volumes: [] # Placeholder
 
 ---

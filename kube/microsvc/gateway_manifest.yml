@@ -27,8 +27,6 @@ spec:
         envFrom:
         - configMapRef:
             name: consul-connection
-        # Other env values: 
-        #    consul (use ConfigMap)
 
 ---
 apiVersion: v1
