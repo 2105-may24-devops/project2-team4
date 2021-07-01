@@ -1,0 +1,37 @@
+# This pipeline will handle the CI/CD of a Flashcard Microservice associated with the project found:
+# https://github.com/2105-may24-devops/project2-quiz-app
+
+trigger:
+  branches:
+    include:
+    - master
+
+  paths:
+    include:
+    - flashcard-service
+    exclude:
+    - quiz-service
+    - README.md
+
+resources:
+- repo: https://github.com/2105-may24-devops/project2-team4.git
+
+variables:
+
+
+stages:
+
+# Continuous Integration - SonarCloud Analysis and Dockerization
+
+- stage: StaticAnalysis
+  displayName: Analysis of Flashcard Microservice with SonarCloud
+
+- stage: DockerBuild
+  displayName: Containerize Flashcard Microservice
+
+# Continuous Deployment - Kubernetes
+- stage: DeployTest
+  displayName: Deploy to Team 4 K8s cluster.
+
+- stage: DeployProduction
+  displayName: Deploy to Trainer Cluster.
