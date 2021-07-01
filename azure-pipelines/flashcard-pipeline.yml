@@ -49,7 +49,7 @@ stages:
 - stage: DockerBuild
   displayName: Containerize Flashcard Microservice
   jobs:
-  - job: Build-Push-Azure
+  - job: BuildPushAzure
     steps:
     - task: Docker@2
       inputs:
@@ -58,7 +58,7 @@ stages:
         command: 'buildAndPush'
         Dockerfile: 'dockerize/flashcard.Dockerfile'
 
-  - job: Build-Push-Docker
+  - job: BuildPushDocker
     steps:
     - task: Docker@2
       inputs:
