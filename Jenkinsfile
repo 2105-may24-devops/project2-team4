@@ -10,9 +10,9 @@ node("master") {
         def list = currentBuild.changeSets
         for (int i=0; i < list.size(); i++) {
             println "${list[i]}, ${list[i].getClass()}, ${list[i].getKind()}"
-            def it = list[i].iterator()
-            while (it.hadNext()) {
-                def item = it.next()
+            def change_iterator = list[i].iterator()
+            while (change_iterator.hadNext()) {
+                def item = change_iterator.next()
                 println "${item}"
             }
         }
