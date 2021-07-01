@@ -55,7 +55,7 @@ stages:
         pollingTimeoutSec: '300'
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(Pipeline.Workspace)/dockerize/'
+        targetPath: './dockerize/'
         artifact: 'flashcard-service-jar'
         publishLocation: 'pipeline'
 
@@ -71,7 +71,7 @@ stages:
         buildType: 'current'
         artifactName: 'flashcard-service-jar'
         itemPattern: '**.jar'
-        targetPath: '$(Pipeline.Workspace)/dockerize/'
+        targetPath: './dockerize/'
     - task: Docker@2
       inputs:
         containerRegistry: 'team4-azure-containers'
