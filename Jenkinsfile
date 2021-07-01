@@ -13,7 +13,7 @@ node("master") {
             def change_iterator = list[i].iterator()
             while (change_iterator.hasNext()) {
                 def item = change_iterator.next()
-                println "${item}"
+                println "${item}, ${item.getClass()}"
             }
         }
     }
