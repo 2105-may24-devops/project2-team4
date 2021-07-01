@@ -55,7 +55,7 @@ stages:
   displayName: Containerize Flashcard Microservice
   dependsOn: StaticAnalysis
   jobs:
-  - job: Build-Push-Azure
+  - job: BuildPushAzure
     steps:
     - task: Docker@2
       inputs:
@@ -65,7 +65,7 @@ stages:
         Dockerfile: 'dockerize/flashcard.Dockerfile'
         tags: 'latest'
 
-  - job: Build-Push-Docker
+  - job: BuildPushDocker
     steps:
     - task: Docker@2
       inputs:
