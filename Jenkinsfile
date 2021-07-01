@@ -10,6 +10,9 @@ node("master") {
         def list = currentBuild.changeSets
         for (int i=0; i < list.size(); i++) {
             println "${list[i]}, ${list[i].getClass()}"
+            for (GitChangeSet change : list[i]) {
+                println "${change}, ${change.getClass()}"
+            }
         }
     }
 }
