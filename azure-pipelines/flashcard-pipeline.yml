@@ -50,13 +50,15 @@ stages:
         sonarQubeRunAnalysis: true
         isJacocoCoverageReportXML: true
         sqMavenPluginVersionChoice: 'latest'
+
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
+
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: './dockerize/'
-        artifact: 'flashcard-service-jar'
+        targetPath: './flashcard-service/target/flashcard-service-0.0.1-SNAPSHOT.jar'
+        artifact: 'flashcard-service'
         publishLocation: 'pipeline'
 
 - stage: DockerBuild
@@ -69,7 +71,7 @@ stages:
     - task: DownloadPipelineArtifact@2
       inputs:
         buildType: 'current'
-        artifactName: 'flashcard-service-jar'
+        artifactName: 'flashcard-service'
         itemPattern: '**.jar'
         targetPath: './dockerize/'
     - task: Docker@2
