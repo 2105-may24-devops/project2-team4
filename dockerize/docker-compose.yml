@@ -26,6 +26,7 @@ services:
       spring.cloud.config.enabled: "false"
     depends_on: 
       - consul
+      - flashcard
   gateway:
     build:
       context: .
