@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flashcard-deploy
-  namespace: p2t4
 spec:
   replicas: 2
   strategy:
@@ -31,9 +30,9 @@ spec:
           mountPath: /app/dbdata/
         env:
         - name: spring.kafka.consumer.bootstrap-servers
-          value: kafka-svc.p2t4:9092 # TODO: placeholder
+          value: kafka-svc:9092 
         - name: spring.kafka.producer.bootstrap-servers
-          value: kafka-svc.p2t4:9092 # TODO: placeholder
+          value: kafka-svc:9092 
         envFrom:
         - configMapRef:
             name: consul-connection
@@ -49,7 +48,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: flashcard-svc
-  namespace: p2t4
 spec:
   type: ClusterIP
   selector:
