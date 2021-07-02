@@ -80,7 +80,7 @@ stages:
         repository: 'team4containers'
         command: 'buildAndPush'
         Dockerfile: 'dockerize/flashcard.Dockerfile'
-        tags: 'latest'
+        tags: 'flashcard-build-$(Build.SourceVersion)'
 
   - job: BuildPushDocker
     steps:
@@ -96,7 +96,7 @@ stages:
         repository: 'iamjarvi/project2-team4'
         command: 'buildAndPush'
         Dockerfile: 'dockerize/flashcard.Dockerfile'
-        tags: 'latest'
+        tags: 'flashcard-build-$(Build.SourceVersion)'
 
 
 # # Continuous Deployment - Kubernetes
