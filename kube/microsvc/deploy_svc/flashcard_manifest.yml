@@ -1,15 +1,29 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: flashcard-deploy
 spec:
-  replicas: 2
-  strategy:
-    type: RollingUpdate
+  serviceName: flashcard-svc
   selector:
     matchLabels:
       stack: backend
       app: flashcard
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: fcdb-pvc
+      spec:
+        storageClassName: default
+        resources:
+          requests:
+            storage: "1Gi"
+        volumeMode: Filesystem
+        accessModes:
+          - ReadWriteOnce
   template:
     metadata:
       labels:
