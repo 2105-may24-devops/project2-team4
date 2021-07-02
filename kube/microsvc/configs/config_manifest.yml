@@ -14,10 +14,7 @@ metadata:
   namespace: p2t4
 data: # may not need ALL of it, some if it should be secret
   # Database Credentials
-  spring.datasource.url: jdbc:h2:file:/app/data/
-  spring.datasource.username: sa
-  spring.datasource.password: password
-  spring.h2.console.enabled: "true"
+  spring.datasource.url: jdbc:h2:file:/app/dbdata/fcdb
 
   # # JPA Settings, already in application.properties file, could put into here if needed.
   # spring.jpa.show-sql: "false"
