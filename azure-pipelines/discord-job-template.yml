@@ -13,6 +13,6 @@ jobs:
           **Build Branch** = $(Build.SourceBranch)
           **Build Status** = $(Agent.JobStatus)
           **Build Reason** = $(Build.Reason)
-          **Result**       = Image: "$(service)-$(Build.BuildVersion)"
+          **Result**       = Image: "$(service)-$(Build.SourceVersion)"
                            = Pushed to Azure Container Registry
                            = Pushed to Docker Hub Repostiroy
