@@ -32,7 +32,7 @@ stages:
 
 - template: ./docker-stage-template.yml
   parameters:
-    displayName: "Containerize $(service) and push to ACR/Dockerhub"
+    displayName: Containerize $(service) and push to ACR/Dockerhub
     targetPath: './dockerize'
     Dockerfile: 'dockerize/flashcard.Dockerfile'
     artifact: $(service)
