@@ -47,4 +47,4 @@ stages:
         command: 'buildAndPush'
         Dockerfile: parameters.Dockerfile
         tags: parameters.tags
-  - template: azure-pipelines/discord-job-template.yml
+  - template: ./discord-job-template.yml
