@@ -1,0 +1,18 @@
+jobs:
+  - job: DiscordMessage
+    steps: 
+    - task: ado-discord-webhook@1
+      inputs:
+        channelId: '856587514218545203'
+        webhookKey: 'OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
+        name: 'Team4-P2'
+        messageType: 'content'
+        content: |
+          __**Flashcard**__:
+          **Build Number** = $(Build.BuildNumber)
+          **Build Branch** = $(Build.SourceBranch)
+          **Build Status** = $(Agent.JobStatus)
+          **Build Reason** = $(Build.Reason)
+          **Result**       = Image: "$(service)-$(Build.SourceVersion)"
+                           = Pushed to Azure Container Registry
+                           = Pushed to Docker Hub Repostiroy
