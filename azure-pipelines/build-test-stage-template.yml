@@ -15,7 +15,7 @@ parameters:
 
 stages:
 - stage: Build_and_Test
-  displayName: parameters.displayName
+  displayName: ${{ parameters.displayName }}
 
   jobs:
   - job: PrepareScan
@@ -28,7 +28,7 @@ stages:
     - task: Maven@3
       inputs:
         mavenPomFile: ${{ parameters.mavenPomFile }}
-        options: $ {{ parameters.options }}
+        options: ${{ parameters.options }}
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         codeCoverageToolOption: 'JaCoCo'

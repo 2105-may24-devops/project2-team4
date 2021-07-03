@@ -12,7 +12,7 @@ parameters:
 
 stages:
 - stage: DockerBuild
-  displayName: $ {{ parameters.displayName }}
+  displayName: ${{ parameters.displayName }}
   dependsOn: Build_and_Test
   jobs:
   - job: BuildPushAzure
