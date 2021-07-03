@@ -30,7 +30,7 @@ stages:
     artifact: $(service)
     displayName: Analysis of $(service) with SonarCloud and Maven Build
 
-- template: azure-pipelines/docker-stage-template.yml
+- template: ./docker-stage-template.yml
   parameters:
     displayName: Containerize $(service) and push to ACR/Dockerhub
     targetPath: './dockerize'
