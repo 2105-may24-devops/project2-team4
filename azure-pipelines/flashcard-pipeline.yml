@@ -16,124 +16,116 @@ trigger:
 # resources:
 # - repo: "https://github.com/2105-may24-devops/project2-team4.git"
 
-#variables:
+variables:
+- name: service
+  value: flashcard-service
 
 
 stages:
+- template: azure-pipelines/build-test-stage-template.yml
+  parameters:
+    mavenPomFile: '$(service)/pom.xml'
+    options: '-f $(service)/pom.xml'
+    targetPath: './$(service)/target/$(service)-0.0.1-SNAPSHOT.jar'
+    artifact: $(service)
+    displayName: Analysis of $(service) with SonarCloud and Maven Build
 
+- template: azure-pipelines/docker-stage-template.yml
+  parameters:
+    displayName: Containerize $(service) and push to ACR/Dockerhub
+    targetPath: './dockerize'
+    Dockerfile: 'dockerize/flashcard.Dockerfile'
+    artifact: $(service)
+    tags: $(service)-$(Build.SourceVersion)
+  
+    
 # Continuous Integration - SonarCloud Analysis and Dockerization
 
-- stage: StaticAnalysis
-  displayName: Analysis of Flashcard Microservice with SonarCloud
+# - stage: StaticAnalysis
+  # displayName: Analysis of Flashcard Microservice with SonarCloud
 
-  jobs:
-  - job: PrepareScan
-    steps:
-    - task: SonarCloudPrepare@1
-      inputs:
-        SonarCloud: 'Project2 Team4 Sonar'
-        organization: '2105-may24-devops'
-        scannerMode: 'Other'
-    - task: Maven@3
-      inputs:
-        mavenPomFile: 'flashcard-service/pom.xml'
-        options: '-f /flashcard-service/pom.xml'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        codeCoverageToolOption: 'JaCoCo'
-        codeCoverageRestoreOriginalPomXml: true
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-        mavenVersionOption: 'Default'
-        mavenAuthenticateFeed: false
-        effectivePomSkip: false
-        sonarQubeRunAnalysis: true
-        isJacocoCoverageReportXML: true
-        sqMavenPluginVersionChoice: 'latest'
+  # jobs:
+  # - job: PrepareScan
+  #   steps:
+  #   - task: SonarCloudPrepare@1
+  #     inputs:
+  #       SonarCloud: 'Project2 Team4 Sonar'
+  #       organization: '2105-may24-devops'
+  #       scannerMode: 'Other'
+  #   - task: Maven@3
+  #     inputs:
+  #       mavenPomFile: 'flashcard-service/pom.xml'
+  #       options: '-f /flashcard-service/pom.xml'
+  #       publishJUnitResults: true
+  #       testResultsFiles: '**/surefire-reports/TEST-*.xml'
+  #       codeCoverageToolOption: 'JaCoCo'
+  #       codeCoverageRestoreOriginalPomXml: true
+  #       javaHomeOption: 'JDKVersion'
+  #       jdkVersionOption: '1.11'
+  #       mavenVersionOption: 'Default'
+  #       mavenAuthenticateFeed: false
+  #       effectivePomSkip: false
+  #       sonarQubeRunAnalysis: true
+  #       isJacocoCoverageReportXML: true
+  #       sqMavenPluginVersionChoice: 'latest'
 
-    - task: SonarCloudPublish@1
-      inputs:
-        pollingTimeoutSec: '300'
+  #   - task: SonarCloudPublish@1
+  #     inputs:
+  #       pollingTimeoutSec: '300'
 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: './flashcard-service/target/flashcard-service-0.0.1-SNAPSHOT.jar'
-        artifact: 'flashcard-service'
-        publishLocation: 'pipeline'
+  #   - task: PublishPipelineArtifact@1
+  #     inputs:
+  #       targetPath: './flashcard-service/target/flashcard-service-0.0.1-SNAPSHOT.jar'
+  #       artifact: 'flashcard-service'
+  #       publishLocation: 'pipeline'
 
-- stage: DockerBuild
-  displayName: Containerize Flashcard Microservice
-  dependsOn: StaticAnalysis
-  jobs:
-  - job: BuildPushAzure
-    steps:
-
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: 'current'
-        artifactName: 'flashcard-service'
-        itemPattern: '**.jar'
-        targetPath: './dockerize/'
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'team4-azure-containers'
-        repository: 'team4containers'
-        command: 'buildAndPush'
-        Dockerfile: 'dockerize/flashcard.Dockerfile'
-        tags: 'flashcard-build-$(Build.SourceVersion)'
-
-  - job: BuildPushDocker
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: 'current'
-        artifactName: 'flashcard-service'
-        itemPattern: '**.jar'
-        targetPath: './dockerize/'
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'team4-docker-containers'
-        repository: 'iamjarvi/project2-team4'
-        command: 'buildAndPush'
-        Dockerfile: 'dockerize/flashcard.Dockerfile'
-        tags: 'flashcard-build-$(Build.SourceVersion)'
-
-
-# # Continuous Deployment - Kubernetes
-# - stage: DeployTest
-#   displayName: Deploy to Team 4 K8s cluster.
+# - stage: DockerBuild
+#   displayName: Containerize Flashcard Microservice
+#   dependsOn: StaticAnalysis
 #   jobs:
-#   - job: getimage
-#     displayName: Download Latest Image
+#   - job: BuildPushAzure
 #     steps:
-#     - task: KubernetesManifest@0
-#       inputs:
-#         action: 'deploy'
 
-# - stage: DeployProduction
-#   displayName: Deploy to Trainer Cluster.
-#   jobs:
-#   - job: getimage
-#     displayName: Download Latest Image
+#     - task: DownloadPipelineArtifact@2
+#       inputs:
+#         buildType: 'current'
+#         artifactName: 'flashcard-service'
+#         itemPattern: '**.jar'
+#         targetPath: './dockerize/'
+#     - task: Docker@2
+#       inputs:
+#         containerRegistry: 'team4-azure-containers'
+#         repository: 'team4containers'
+#         command: 'buildAndPush'
+#         Dockerfile: 'dockerize/flashcard.Dockerfile'
+#         tags: 'flashcard-build-$(Build.SourceVersion)'
+
+#   - job: BuildPushDocker
 #     steps:
-#     - task: KubernetesManifest@0
+#     - task: DownloadPipelineArtifact@2
 #       inputs:
-#         action: 'deploy'
-
-- stage: DiscordWebhook
-  displayName: Publish build to discord
-  jobs:
-  - job: DiscordMessage
-    steps: 
-    - task: ado-discord-webhook@1
-      inputs:
-        channelId: '856587514218545203'
-        webhookKey: 'OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
-        name: 'Team4-P2'
-        messageType: 'content'
-        content: |
-          __**Flashcard**__:
-          **Build Number** = $(Build.BuildNumber)
-          **Build Branch** = $(Build.SourceBranch)
-          **Build Status** = $(Agent.JobStatus)
-          **Build Reason** = $(Build.Reason)
+#         buildType: 'current'
+#         artifactName: 'flashcard-service'
+#         itemPattern: '**.jar'
+#         targetPath: './dockerize/'
+#     - task: Docker@2
+#       inputs:
+#         containerRegistry: 'team4-docker-containers'
+#         repository: 'iamjarvi/project2-team4'
+#         command: 'buildAndPush'
+#         Dockerfile: 'dockerize/flashcard.Dockerfile'
+#         tags: 'flashcard-build-$(Build.SourceVersion)'
+  # - job: DiscordMessage
+  #   steps: 
+  #   - task: ado-discord-webhook@1
+  #     inputs:
+  #       channelId: '856587514218545203'
+  #       webhookKey: 'OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
+  #       name: 'Team4-P2'
+  #       messageType: 'content'
+  #       content: |
+  #         __**Flashcard**__:
+  #         **Build Number** = $(Build.BuildNumber)
+  #         **Build Branch** = $(Build.SourceBranch)
+  #         **Build Status** = $(Agent.JobStatus)
+  #         **Build Reason** = $(Build.Reason)
