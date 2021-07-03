@@ -24,7 +24,7 @@ variables:
 stages:
 - template: ./build-test-stage-template.yml
   parameters:
-    mavenPomFile: '$(service)/pom.xml'
+    mavenPomFile: './$(service)/pom.xml'
     options: '-f $(service)/pom.xml'
     targetPath: './$(service)/target/$(service)-0.0.1-SNAPSHOT.jar'
     artifact: $(service)
