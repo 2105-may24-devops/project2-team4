@@ -10,6 +10,7 @@ parameters:
   - name: 'Dockerfile'
     type: string
 
+stages:
 - stage: DockerBuild
   displayName: parameters.displayName
   dependsOn: Build_and_Test
