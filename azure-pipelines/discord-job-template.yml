@@ -1,4 +1,4 @@
-
+jobs:
   - job: DiscordMessage
     steps: 
     - task: ado-discord-webhook@1
