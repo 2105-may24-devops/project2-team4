@@ -22,7 +22,7 @@ variables:
 
 
 stages:
-- template: /build-test-stage-template.yml
+- template: azure-pipelines/build-test-stage-template.yml
   parameters:
     mavenPomFile: '$(service)/pom.xml'
     options: '-f $(service)/pom.xml'
