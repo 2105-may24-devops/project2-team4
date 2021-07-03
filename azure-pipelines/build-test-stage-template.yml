@@ -27,8 +27,8 @@ stages:
         scannerMode: 'Other'
     - task: Maven@3
       inputs:
-        mavenPomFile: parameters.mavenPomFile
-        options: parameters.options
+        mavenPomFile: ${{ parameters.mavenPomFile }}
+        options: $ {{ parameters.options }}
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         codeCoverageToolOption: 'JaCoCo'
@@ -48,6 +48,6 @@ stages:
 
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: parameters.targetPath
-        artifact: parameters.artifact
+        targetPath: ${{ parameters.targetPath }}
+        artifact: ${{ parameters.artifact }}
         publishLocation: 'pipeline'
