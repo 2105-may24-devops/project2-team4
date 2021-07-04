@@ -5,15 +5,15 @@ trigger:
 
   paths:
     include:
-    - quiz-service
+    - gateway-service
     exclude:
     - flashcard-service
-    - gateway-service
+    - quiz-service
     
 
 variables:
 - name: service
-  value: quiz-service
+  value: gateway-service
 
 
 stages:
@@ -29,6 +29,6 @@ stages:
   parameters:
     displayName: '${{ variables.service }} Image Build and Push to ACR/Dockerhub'
     targetPath: './dockerize'
-    Dockerfile: 'dockerize/quiz.Dockerfile'
+    Dockerfile: 'dockerize/gateway.Dockerfile'
     artifact: $(service)
     tags: "$(service)-$(Build.SourceVersion)"
