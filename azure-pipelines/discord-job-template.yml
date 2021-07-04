@@ -14,9 +14,9 @@ jobs:
         content: |
           **Team 4 Project 2**: $(Build.SourceVersionMessage)
           ```
-          **Build Number** = $(Build.BuildNumber)
-          **Build Branch** = $(Build.SourceBranch)
-          **Build Reason** =  $(Build.Reason)
+          Build Number: $(Build.BuildNumber)
+          Build Branch: $(Build.SourceBranch)
+          Build Reason: $(Build.Reason)
           ```
           **Result**: $(Agent.JobStatus)
           ```
