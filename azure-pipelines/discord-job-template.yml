@@ -1,5 +1,9 @@
 jobs:
   - job: DiscordMessage
+    dependsOn:
+      - BuildPushDocker
+      - BuildPushAzure
+
     steps: 
     - task: ado-discord-webhook@1
       inputs:
@@ -8,15 +12,15 @@ jobs:
         name: 'Team4-P2'
         messageType: 'content'
         content: |
-          **Team 4 Project 2*** - $(Build.SourceVersionMessage)
+          **Team 4 Project 2**: $(Build.SourceVersionMessage)
           ```
           **Build Number** = $(Build.BuildNumber)
           **Build Branch** = $(Build.SourceBranch)
-          **Build Status** = $(Agent.JobStatus)
+          **Build Reason** =  $(Build.Reason)
           ```
-          **Build Reason** = $(Build.Reason)
+          **Result**: $(Agent.JobStatus)
           ```
-          **Result**       = Image: "$(service)-$(Build.SourceVersion)"
-                           = Pushed to Azure Container Registry
-                           = Pushed to Docker Hub Repostiroy
+          Image: "$(service)-$(Build.SourceVersion)"
+          Pushed to Azure Container Registry
+          Pushed to Docker Hub Repostiroy
           ```
