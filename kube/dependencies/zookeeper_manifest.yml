@@ -4,8 +4,9 @@ metadata:
   name: zookeeper-deploy
 spec:
   selector:
-    stack: dependency
-    app: zoo
+    matchLabels:
+      stack: dependency
+      app: zoo
   template:
     metadata:
       labels:
@@ -35,4 +36,4 @@ spec:
     app: zoo
   type: ClusterIP
   ports:
-    - 2181
+    - port: 2181

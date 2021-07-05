@@ -9,8 +9,8 @@ spec:
       stack: backend
       app: flashcard
   replicas: 2
-  strategy:
-    type: RollingUpdate
+  # strategy:
+  #   type: RollingUpdate
   volumeClaimTemplates:
     - apiVersion: v1
       kind: PersistentVolumeClaim
@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: flashcard
-        image: <Image> # TODO: Placeholder
+        image: mdarmawan/flashcard:mdtest # TODO: Placeholder
         resources:
           limits:
             memory: "1Gi"

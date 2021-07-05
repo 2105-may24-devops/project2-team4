@@ -4,16 +4,17 @@ metadata:
   name: kafka-deploy
 spec:
   selector:
-    stack: dependency
-    app: kafka
+    matchLabels:
+      stack: dependency
+      app: kafka
   template:
     metadata:
       labels:
         stack: dependency
         app: kafka
     spec:
-      initContainers:
-      - name: blah #TODO:
+      # initContainers:
+      # - name: blah #TODO:
       containers:
       - name: kafka
         image: bitnami/kafka
@@ -39,5 +40,6 @@ spec:
     app: kafka
   type: ClusterIP
   ports:
-    - 9092
+  - port: 9092
+    name: kafka-svc-port
     

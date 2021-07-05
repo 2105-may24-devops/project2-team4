@@ -4,8 +4,9 @@ metadata:
   name: consul-deploy
 spec:
   selector:
-    stack: dependency
-    app: consul
+    matchLabels:
+      stack: dependency
+      app: consul
   template:
     metadata:
       labels:
@@ -32,4 +33,5 @@ spec:
     app: consul
   type: ClusterIP
   ports:
-    - 2181
+  - port: 8500
+    name: consul-svc-port
