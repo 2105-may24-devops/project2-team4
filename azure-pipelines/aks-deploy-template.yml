@@ -1,0 +1,53 @@
+parameters:
+  - name: 'displayName'
+    type: string
+  - name: 'environment'
+    type: string
+  - name: 'artifactName'
+    type: string
+  - name: 'downloadPath'
+    type: string
+  - name: 'namespace'
+    type: string
+  - name: 'containers'
+    type: string
+  - name: 'manifests'
+    type: string
+  - name: 'strategy'
+    type: string
+
+
+
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy job
+    pool:
+      vmImage: $(vmImageName)
+    environment: ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          # I think it needs this to pull from ACR.
+          - task: KubernetesManifest@0
+            displayName: Create imagePullSecret
+            inputs:
+            action: createSecret
+            secretName: $(imagePullSecret)
+            namespace: ${{ parameters.namespace }}
+            dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+              
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes cluster
+            inputs:
+              action: deploy
+              namespace: ${{ parameters.namespace }}
+              manifests: |
+                ${{ parameters.manifest}}
+              
+              containers: |
+                ${{ parameters.containers }}
