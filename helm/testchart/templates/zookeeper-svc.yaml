@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.zookeeper.service.name }}
+  namespace: {{ .Values.mynamespace }}
+spec:
+{{- with .Values.zookeeper }}
+  selector:
+    stack: dependency
+    app: zoo
+  type: {{ .service.type  }}
+  ports:
+    - port: {{ .port }}
+      name: {{ service.ports.name }}
+{{- end }}

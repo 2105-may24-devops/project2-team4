@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.db-cm.name }}
+  namespace: {{ .Values.mynamespace }}
+data: 
+  # Database Credentials
+  spring.datasource.url: jdbc:h2:{{ ternary file mem .Values.config.db-cm.inFile }}:{{ ternary .Values.volumes.fcdbVol.mountPath fcdb .Values.config.db-cm.inFile}}

@@ -2,9 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myingress
-  namespace: p2t4
   labels:
-    name: myingress
+    name: gateway
 spec:
   defaultBackend:
     service:
@@ -21,11 +20,11 @@ spec:
           service:
             name: flashcard-svc
             port: 
-              number: fc-port
+              name: fc-port
       - pathType: Prefix
         path: "/quiz"
         backend:
           service:
             name: quiz-svc
             port: 
-              number: quiz-port
+              name: quiz-port

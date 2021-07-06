@@ -1,8 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment # maybe zookeeper should be a statefulSet
 metadata:
-  name: zookeeper-deploy
+  name: {{ .Values.zookeeper.deploy.name }}
+  namespace: {{ .Values.mynamespace }}
 spec:
+{{- with .Values.zookeeper }}
   selector:
     matchLabels:
       stack: dependency
@@ -15,25 +17,16 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: bitnami/zookeeper
+        image: bitnami/zookeeper:{{ .deploy.imageTag }}
         ports: 
-        - containerPort: 2181
+        - containerPort: {{ .port }}
         env:
         - name: ALLOW_ANONYMOUS_LOGIN #hard-coding here is fine, I think.
           value: "yes"
+        {{- with deploy.resources }}
         resources:
           limits:
-            memory: "128Mi"
-            cpu: "100m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: zookeeper-svc
-spec:
-  selector:
-    stack: dependency
-    app: zoo
-  type: ClusterIP
-  ports:
-    - port: 2181
+            memory: {{ .limits.memory | quote }}
+            cpu: {{ .limits.cpu | quote }}
+        {{- end }}
+{{- end }}

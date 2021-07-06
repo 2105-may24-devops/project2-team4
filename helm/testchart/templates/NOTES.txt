@@ -1,0 +1,2 @@
+This is HelpText
+Release Name is {{ .Release.Name }}
