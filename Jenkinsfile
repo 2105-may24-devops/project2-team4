@@ -7,7 +7,7 @@ node("master") {
         sh "echo $BRANCH_NAME"
         checkout scm
         def func =  load("vars/sayHello.groovy")
-        func.hello("dave")
-        println func
+        f = func.hello("dave")
+        println "$func, $f"
     }
 }
