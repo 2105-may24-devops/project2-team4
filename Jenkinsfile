@@ -6,7 +6,7 @@ node("master") {
         sh "ls"
         sh "echo $BRANCH_NAME"
         checkout scm
-        library "project2-team4@jenkins-library-test"
+        library("project2-team4")
        
         sayHello("dave")
     }
