@@ -6,7 +6,7 @@ node("master") {
         sh "ls"
         sh "echo $BRANCH_NAME"
         checkout scm
-        library("var")
+        library("vars")
        
         sayHello("dave")
     }
