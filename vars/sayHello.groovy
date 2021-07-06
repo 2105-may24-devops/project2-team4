@@ -2,6 +2,7 @@
 
 def hello(String name = 'human') {
     sh "ls"
+    return 10
 }
 
 
