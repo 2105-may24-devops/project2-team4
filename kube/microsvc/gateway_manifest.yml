@@ -22,7 +22,9 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 8080
-        env: []
+        env: 
+        - name: spring.cloud.consul.discovery.hostname
+          value: quiz-svc
         envFrom:
         - configMapRef:
             name: consul-connection
