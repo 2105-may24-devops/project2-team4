@@ -2,11 +2,11 @@ apiVersion: apps/v1
 kind: Deployment # maybe zookeeper should be a statefulSet
 metadata:
   name: consul-deploy
-  namespace: p2t4 # in theory, this is inadvisable to put here, use kubectl
 spec:
   selector:
-    stack: dependency
-    app: consul
+    matchLabels:
+      stack: dependency
+      app: consul
   template:
     metadata:
       labels:
@@ -27,11 +27,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: consul-svc
-  namespace: p2t4
 spec:
   selector:
     stack: dependency
     app: consul
-  type: ClusterIP
+  # type: ClusterIP
+  type: LoadBalancer
   ports:
-    - 2181
+  - port: 8500
+    name: consul-svc-port

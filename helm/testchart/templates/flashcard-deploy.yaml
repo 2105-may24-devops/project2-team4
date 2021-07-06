@@ -1,30 +1,34 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: flashcard-sset
+  name: {{ .Values.flashcard.deploy.name }}
+  namespace: {{ .Values.mynamespace }}
 spec:
-  serviceName: flashcard-svc
+  serviceName: {{ .Values.flashcard.service.name}}
   selector:
     matchLabels:
       stack: backend
       app: flashcard
-  replicas: 2
+  replicas: {{ .Values.flashcard.deploy.replicas }}
   # strategy:
   #   type: RollingUpdate
   volumeClaimTemplates:
+  {{- with .Values.volumes.fcdbVol }}
     - apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        name: fcdb-pvc
+        name: {{ .name }}-sset
       spec:
-        storageClassName: default
+        storageClassName: {{ .storageClassName }}
         resources:
           requests:
-            storage: "1Gi"
+            storage: {{ .resources.requests.storage | quote}}
         volumeMode: Filesystem
         accessModes:
-          - ReadWriteOnce
+          - {{ .access }}
+  {{- end}}
   template:
+  {{- with .Values.flashcard }}
     metadata:
       labels:
         stack: backend
@@ -52,23 +56,8 @@ spec:
             name: consul-connection
         - configMapRef:
             name: db-info
+  {{- end }}
       volumes: 
       - name: embed-db 
         persistentVolumeClaim:
           claimName: fcdb-pvc
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: flashcard-svc
-  annotations:
-    'consul.hashicorp.com/service-sync': 'true'
-spec:
-  type: ClusterIP
-  selector:
-    stack: backend
-    app: flashcard
-  ports:
-  - port: 8089
-    name: fc-port
