@@ -7,7 +7,8 @@ node("master") {
         sh "ls"
         sh "echo $BRANCH_NAME"
         checkout scm
-        sayHello("person")
+        def f = load 'dev/sayHello.groovy'
+        f("hello")
 
     }
 }
