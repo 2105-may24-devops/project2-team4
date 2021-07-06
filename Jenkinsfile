@@ -1,4 +1,4 @@
-@Library("project2-team4")_
+@Library("project2-team4@jenkins-library-test")_
 
 node("master") {
     def stagesToRun = [:]
