@@ -6,8 +6,7 @@ node("master") {
         sh "ls"
         sh "echo $BRANCH_NAME"
         checkout scm
-        library("vars")
-       
-        sayHello("dave")
+        def func =  load("vars/sayHello.groovy")
+        func.sayHello("dave")
     }
 }
