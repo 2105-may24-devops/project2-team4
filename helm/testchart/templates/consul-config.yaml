@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.consul.name }}
+  namespace: {{ .Values.mynamespace }}
+data:
+  spring.cloud.consul.host: {{ .Values.config.consul.data.host }}
+  spring.cloud.consul.port: {{ .Values.config.consul.data.port | quote }}

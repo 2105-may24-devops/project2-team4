@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: quiz-deploy
 spec:
+  replicas: 1
   selector:
     matchLabels:
       stack: backend
@@ -23,7 +24,9 @@ spec:
         ports:
         - containerPort: 8090
         volumeMounts: [] # Placeholder
-        env: []
+        env: 
+        - name: spring.cloud.consul.discovery.hostname
+          value: quiz-svc
         envFrom:
         - configMapRef:
             name: consul-connection
@@ -36,6 +39,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: quiz-svc
+  # annotations:
+  #   'consul.hashicorp.com/service-sync': 'true'
 spec:
   type: ClusterIP
   selector:

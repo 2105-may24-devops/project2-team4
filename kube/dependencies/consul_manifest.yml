@@ -31,7 +31,8 @@ spec:
   selector:
     stack: dependency
     app: consul
-  type: ClusterIP
+  # type: ClusterIP
+  type: LoadBalancer
   ports:
   - port: 8500
     name: consul-svc-port

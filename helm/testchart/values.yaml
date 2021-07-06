@@ -1,0 +1,78 @@
+mynamespace: mdtest1
+# namespace: {{ .Values.mynamespace }}
+flashcard:
+  port: 8089
+  deploy:
+    replicas: 2
+    name: flashcard-sset 
+    image:
+      name: mdarmawan/flashcard
+      tag: mdtest
+    resources:
+      limits:
+        memory: 1Gi
+        cpu: 100m
+  service:
+    name: flashcard-svc
+
+quiz:
+  port: 8090
+  deploy:
+  service:
+
+gateway:
+  port: 8080
+  deploy:
+  service:
+
+config:
+  consul:
+    name: consul-connection
+    data:
+      host: consul-server
+      port: 8500
+  db-cm:
+    name: db-info
+    inFile: true
+
+volumes:
+  fcdbVol:
+    name: fcdb-pvc
+    storageClassName: default
+    mountPath: /app/dbdata/fcdb
+    resources:
+      requests:
+        storage: 1Gi
+    access: ReadWriteOnce
+
+zookeeper:
+  port: 2181
+  deploy:
+    name: zookeeper-deploy
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 100m
+    imageTag: latest
+  service:
+    name: zookeeper-svc
+    type: ClusterIP
+    ports:
+      name: zookeeper-port
+
+kafka:
+  port: 9092
+  deploy:
+    imageTag: latest
+    resources:
+      limits: 
+        memory: 512Mi
+        cpu: 100m
+  service:
+    name: kafka-svc
+    type: ClusterIP
+    ports:
+      name: kafka-svc-port
+  
+# ignoring consul for now, using a subchart
+

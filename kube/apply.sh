@@ -9,9 +9,9 @@ cd ../configs
 kubectl apply -f config_manifest.yml -n mdtest
 echo -e "############# done deploying config\n"
 
-# cd ../volumes
-# kubectl apply -f fcdbpvc_manifest.yml -n mdtest
-# echo -e "############# done deploying pvc\n"
+cd ../volumes
+kubectl apply -f fcdbpvc_manifest.yml -n mdtest
+echo -e "############# done deploying pvc\n"
 
 cd ../microsvc
 kubectl apply -f gateway_manifest.yml -n mdtest

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.volumes.fcdbVol.name }}
+  namespace: {{ .Values.mynamespace }}
+spec:
+{{- with .Values.volumes.fcdbVol }}
+  storageClassName: {{ .storageClassName }}
+  resources:
+    requests:
+      storage: {{ .resources.requests.storage | quote }}
+  volumeMode: Filesystem
+  accessModes:
+    - {{ .access }}
+{{- end }}
