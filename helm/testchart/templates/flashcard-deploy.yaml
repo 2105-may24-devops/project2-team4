@@ -36,28 +36,33 @@ spec:
     spec:
       containers:
       - name: flashcard
-        image: mdarmawan/flashcard:mdtest # TODO: Placeholder
+        image: {{ .deploy.image.name }}:{{ .deploy.image.tag }}
+        {{- with .deploy.resources}}
         resources:
           limits:
-            memory: "1Gi"
-            cpu: "1000m"
+            memory: {{ .limits.memory | quote }}
+            cpu: {{ .limits.cpu | quote }}
+        {{- end }}
         ports:
-        - containerPort: 8089
+        - containerPort: {{ .port }}
+  {{- end }}
+  {{- if .Values.config.db-cm.inFile}}
         volumeMounts: 
         - name: embed-db
           mountPath: /app/dbdata/
+  {{- end }}
         env:
         - name: spring.kafka.consumer.bootstrap-servers
-          value: kafka-svc:9092 
+          value: {{ .Values.kafka.service.name }}:{{ .Values.kafka.port }}
         - name: spring.kafka.producer.bootstrap-servers
-          value: kafka-svc:9092 
+          value: {{ .Values.kafka.service.name }}:{{ .Values.kafka.port }}
         envFrom:
         - configMapRef:
-            name: consul-connection
+            name: {{ .Values.config.consul.name }}
         - configMapRef:
-            name: db-info
-  {{- end }}
+            name: {{ .Values.config.db-cm.name }}
+  
       volumes: 
       - name: embed-db 
         persistentVolumeClaim:
-          claimName: fcdb-pvc
+          claimName: {{ .Values.volumes.fcdbVol.name }}

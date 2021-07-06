@@ -4,7 +4,7 @@ flashcard:
   port: 8089
   deploy:
     replicas: 2
-    name: flashcard-sset 
+    name: flashcard-sset
     image:
       name: mdarmawan/flashcard
       tag: mdtest
@@ -18,19 +18,40 @@ flashcard:
 quiz:
   port: 8090
   deploy:
+    replicas: 1
+    name: quiz-deploy
+    image:
+      name: mdarmawan/quiz
+      tag: mdtest
+    resources:
+      limits:
+        memory: 1.5Gi
+        cpu: 1000m
   service:
+    name: quiz-svc
+    type: ClusterIP
+    portName: quiz-port
 
 gateway:
   port: 8080
   deploy:
+    replicas: 1
+    name: gateway-deploy
+    image:
+      name: mdarmawan/gateway
+      tag: mdtest
+    resources:
+      limits:
+        memory: 1Gi
+        cpu: 500m
   service:
+    name: gateway-svc
+    type: LoadBalancer
+    portName: entrypoint
 
 config:
   consul:
     name: consul-connection
-    data:
-      host: consul-server
-      port: 8500
   db-cm:
     name: db-info
     inFile: true
@@ -39,7 +60,7 @@ volumes:
   fcdbVol:
     name: fcdb-pvc
     storageClassName: default
-    mountPath: /app/dbdata/fcdb
+    mountPath: /app/dbdata/
     resources:
       requests:
         storage: 1Gi
@@ -74,5 +95,19 @@ kafka:
     ports:
       name: kafka-svc-port
   
-# ignoring consul for now, using a subchart
+consul:
+  port: 8500
+  deploy:
+    name: consul-deploy
+    imageTag: latest
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 200m
+  service:
+    name: consul-svc
+    type: ClusterIP
+    ports:
+      name: consul-svc-port
+
 

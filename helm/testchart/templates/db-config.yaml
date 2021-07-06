@@ -5,4 +5,4 @@ metadata:
   namespace: {{ .Values.mynamespace }}
 data: 
   # Database Credentials
-  spring.datasource.url: jdbc:h2:{{ ternary file mem .Values.config.db-cm.inFile }}:{{ ternary .Values.volumes.fcdbVol.mountPath fcdb .Values.config.db-cm.inFile}}
+  spring.datasource.url: jdbc:h2:{{ ternary file mem .Values.config.db-cm.inFile }}:{{ ternary .Values.volumes.fcdbVol.mountPath "" .Values.config.db-cm.inFile}}fcdb

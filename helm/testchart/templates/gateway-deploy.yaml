@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.gateway.deploy.name }}
+  namespace: {{ .Values.mynamespace }}
+spec:
+  replicas: {{ .Values.gateway.deploy.replicas }}
+  selector:
+    matchLabels:
+      stack: backend
+      app: gateway
+  template:
+    metadata:
+      labels:
+        stack: backend
+        app: gateway
+    spec:
+    {{- with .Values.gateway }}
+      containers:
+      - name: gateway
+        image: {{ .deploy.image.name }}:{{ .deploy.image.tag}}
+        resources:
+          limits:
+            memory: {{ .deploy.resources.limits.memory | quote }}
+            cpu: {{ .deploy.resources.limits.cpu | quote }}
+        ports:
+        - containerPort: {{ .port }}
+        env: 
+        - name: spring.cloud.consul.discovery.hostname
+          value: {{ .service.name }}
+    {{- end }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.config.consul.name }}
