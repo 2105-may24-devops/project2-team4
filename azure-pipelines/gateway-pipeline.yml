@@ -32,3 +32,12 @@ stages:
     Dockerfile: 'dockerize/gateway.Dockerfile'
     artifact: $(service)
     tags: "$(service)-$(Build.SourceVersion)"
+
+- template: ./docker-stage-template.yml
+  parameters:
+    displayName: '${{ variables.service }} Image Build and Push to ACR/Dockerhub'
+    targetPath: './dockerize'
+    Dockerfile: 'dockerize/flashcard.Dockerfile'
+    artifact: $(service)
+    tags: latest
+    repository: 'team4revops/$(service)'

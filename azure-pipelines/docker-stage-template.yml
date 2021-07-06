@@ -9,6 +9,8 @@ parameters:
     type: string
   - name: 'Dockerfile'
     type: string
+  - name: 'repository'
+    type: string
 
 stages:
 - stage: DockerBuild
@@ -43,7 +45,7 @@ stages:
     - task: Docker@2
       inputs:
         containerRegistry: 'team4-docker-containers'
-        repository: 'iamjarvi/project2-team4'
+        repository: ${{ parameters.repository }}
         command: 'buildAndPush'
         Dockerfile: ${{ parameters.Dockerfile }}
         tags: ${{ parameters.tags }}
