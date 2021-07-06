@@ -1,7 +1,8 @@
 #!/usr/bin/env groovy
 
-def call(String name = 'human') {
-    echo "Hello, ${name}."
+def hello(String name = 'human') {
+    println "hello"
 }
+
 
 return this
