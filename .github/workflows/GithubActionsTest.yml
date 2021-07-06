@@ -34,3 +34,20 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+      - name: Discord Message Notify
+        # You may pin to the exact commit or the version.
+        # uses: appleboy/discord-action@4c196125180125310ac20c72034757bb71020383
+        uses: appleboy/discord-action@0.0.3
+        with:
+          # discord webhook id
+          webhook_id: '856587514218545203'
+          # discord webhook token
+          webhook_token: 'OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
+          # the message contents (up to 2000 characters)
+          message: "This is from GitHub Actions!"
+          # color code of the embed
+          color: "#F3F910"
+          # override the default username of the webhook
+          username: "Team4-Webhooks"
+          # override the default avatar of the webhook
+          avatar_url: "https://i.pinimg.com/236x/da/df/6a/dadf6a20353342886904afc6af052b3a--for-cats-ironman.jpg"
