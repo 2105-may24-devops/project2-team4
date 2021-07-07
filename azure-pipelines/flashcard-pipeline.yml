@@ -70,7 +70,7 @@ stages:
           kubernetesServiceEndpoint: 'k8s cluster test-team-4-test-test-1625583506630'
           namespace: 'test'
           command: 'apply'
-          arguments: '-f ./kube/zookeeper_manifest.yml'
+          arguments: '-f ./kube/dependencies/zookeeper_manifest.yml'
           secretType: 'dockerRegistry'
           containerRegistryType: 'Azure Container Registry'
       - task: Kubernetes@1
@@ -79,7 +79,7 @@ stages:
           kubernetesServiceEndpoint: 'k8s cluster test-team-4-test-test-1625583506630'
           namespace: 'test'
           command: 'apply'
-          arguments: '-f ./kube/kafka_manifest.yml'
+          arguments: '-f ./kube/dependencies/kafka_manifest.yml'
           secretType: 'dockerRegistry'
           containerRegistryType: 'Azure Container Registry'
       - task: Kubernetes@1
@@ -88,7 +88,7 @@ stages:
           kubernetesServiceEndpoint: 'k8s cluster test-team-4-test-test-1625583506630'
           namespace: 'test'
           command: 'apply'
-          arguments: '-f ./kube/consul_manifest.yml'
+          arguments: '-f ./kube/dependencies/consul_manifest.yml'
           secretType: 'dockerRegistry'
           containerRegistryType: 'Azure Container Registry'
       - task: Kubernetes@1
