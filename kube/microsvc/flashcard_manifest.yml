@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: flashcard
-        image: mdarmawan/flashcard:mdtest # TODO: Placeholder
+        image: __container__/__image__:__tag__ #mdarmawan/flashcard:mdtest # TODO: Placeholder
         resources:
           limits:
             memory: "1Gi"
