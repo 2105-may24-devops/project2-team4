@@ -27,6 +27,7 @@ stages:
 
 - template: ./docker-stage-template.yml
   parameters:
+    stage: CommitImage
     displayName: '${{ variables.service }} Image Build and Push to ACR/Dockerhub'
     targetPath: './dockerize'
     Dockerfile: 'dockerize/quiz.Dockerfile'
@@ -35,6 +36,7 @@ stages:
 
 - template: ./docker-stage-template.yml
   parameters:
+    stage: LatestImage
     displayName: '${{ variables.service }} Image Build and Push to ACR/Dockerhub'
     targetPath: './dockerize'
     Dockerfile: 'dockerize/flashcard.Dockerfile'
