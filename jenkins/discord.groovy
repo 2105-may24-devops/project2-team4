@@ -5,7 +5,10 @@ def createDescription(dockerChanges, serviceChanges) {
     def description = "Node Name: $NODE_NAME \nJob Name: $JOB_NAME \nBuild Number: $BUILD_NUMBER\n Build ID: $BUILD_ID \n"
 
     for (key in dockerChanges.keySet()) {
-        description = "${description}${key}: ${ dockerChanges[key][1] || serviceChanges[key] ? 'updated' : 'unchanged' } \n"
+        // capitalize service names
+        def split = key.split("-")
+        def serviceName = "${split[0].charAt(0).toUpperCase}${split[0].substring(1)} ${split[0].charAt(0).toUpperCase}${split[0].substring(1)}"
+        description = "${description}${serviceName}: ${ dockerChanges[key][1] || serviceChanges[key] ? 'Updated' : 'Unchanged' } \n"
     }
     return description
 }
