@@ -85,8 +85,6 @@ node("master") {
 
     def serviceChangeSet
 
-    def artifactsExist = load("vars/lastBuildWithArtifacts.groovy") 
-
     stage("Build, Test and Analyze") {
         sh "echo $BRANCH_NAME"
         println "${env.flashcard_build} build id"
