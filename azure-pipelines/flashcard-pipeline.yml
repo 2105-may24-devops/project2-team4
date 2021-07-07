@@ -67,7 +67,7 @@ stages:
       - task: Kubernetes@1
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'k8s cluster test-team-4-test-test-1625583506630'
+          kubernetesServiceEndpoint: 'team4dev-cluster'
           namespace: 'test'
           command: 'apply'
           arguments: '-f ./kube/dependencies/zookeeper_manifest.yml'
@@ -76,7 +76,7 @@ stages:
       - task: Kubernetes@1
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'k8s cluster test-team-4-test-test-1625583506630'
+          kubernetesServiceEndpoint: 'team4dev-cluster'
           namespace: 'test'
           command: 'apply'
           arguments: '-f ./kube/dependencies/kafka_manifest.yml'
@@ -85,7 +85,7 @@ stages:
       - task: Kubernetes@1
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'k8s cluster test-team-4-test-test-1625583506630'
+          kubernetesServiceEndpoint: 'team4dev-cluster'
           namespace: 'test'
           command: 'apply'
           arguments: '-f ./kube/dependencies/consul_manifest.yml'
@@ -94,7 +94,7 @@ stages:
       - task: Kubernetes@1
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'k8s cluster test-team-4-test-test-1625583506630'
+          kubernetesServiceEndpoint: 'team4dev-cluster'
           namespace: 'test'
           command: 'apply'
           arguments: '-f ./kube/configs/config_manifest.yml'
@@ -103,7 +103,7 @@ stages:
       - task: Kubernetes@1
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'k8s cluster test-team-4-test-test-1625583506630'
+          kubernetesServiceEndpoint: 'team4dev-cluster'
           namespace: 'test'
           command: 'apply'
           arguments: '-f ./kube/volumes/fcdbpvc_manifest.yml'
@@ -126,7 +126,7 @@ stages:
       - task: KubernetesManifest@0
         inputs:
           action: 'deploy'
-          kubernetesServiceConnection: 'k8s cluster test-team-4-test-test-1625583506630'
+          kubernetesServiceConnection: 'team4dev-cluster'
           namespace: 'test'
           manifests: './kube/microsvc/flashcard_manifest.yml'
   
