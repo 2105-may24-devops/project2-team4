@@ -122,7 +122,7 @@ stages:
           useLegacyPattern: false
           defaultValue: 'team4revops/flashcard-service:latest'
           enableTransforms: false
-          enableTelemetry: true
+          enableTelemetry: false
       - task: KubernetesManifest@0
         inputs:
           action: 'deploy'
