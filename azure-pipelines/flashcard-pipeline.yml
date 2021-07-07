@@ -67,7 +67,7 @@ stages:
       - task: Kubernetes@1
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'team4dev-cluster'
+          kubernetesServiceEndpoint: 'team4cluster'
           namespace: 'test'
           command: 'apply'
           useConfigurationFile: true
@@ -78,7 +78,7 @@ stages:
       - task: Kubernetes@1
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'team4dev-cluster'
+          kubernetesServiceEndpoint: 'team4cluster'
           namespace: 'test'
           command: 'apply'
           useConfigurationFile: true
@@ -88,7 +88,7 @@ stages:
       - task: Kubernetes@1
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'team4dev-cluster'
+          kubernetesServiceEndpoint: 'team4cluster'
           namespace: 'test'
           command: 'apply'
           useConfigurationFile: true
@@ -98,7 +98,7 @@ stages:
       - task: Kubernetes@1
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'team4dev-cluster'
+          kubernetesServiceEndpoint: 'team4cluster'
           namespace: 'test'
           command: 'apply'
           useConfigurationFile: true
@@ -108,7 +108,7 @@ stages:
       - task: Kubernetes@1
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'team4dev-cluster'
+          kubernetesServiceEndpoint: 'team4cluster'
           namespace: 'test'
           command: 'apply'
           useConfigurationFile: true
@@ -133,7 +133,7 @@ stages:
       - task: KubernetesManifest@0
         inputs:
           action: 'deploy'
-          kubernetesServiceConnection: 'team4dev-cluster'
+          kubernetesServiceConnection: 'team4cluster'
           namespace: 'test'
           manifests: './kube/microsvc/flashcard_manifest.yml'
   
