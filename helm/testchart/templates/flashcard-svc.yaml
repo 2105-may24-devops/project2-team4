@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.flashcard.service.name }}
+spec:
+  type: {{ .Values.flashcard.service.type }}
+  selector:
+    stack: backend
+    app: flashcard
+  ports:
+  - port: {{ .Values.flashcard.port }}
+    name: {{ .Values.flashcard.service.portName }}

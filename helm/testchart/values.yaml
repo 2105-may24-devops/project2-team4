@@ -12,6 +12,8 @@ flashcard:
         cpu: 100m
   service:
     name: flashcard-svc
+    type: ClusterIP
+    portName: fc-port
 
 quiz:
   port: 8090

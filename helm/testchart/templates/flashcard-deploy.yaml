@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ .Values.flashcard.deploy.name }}
 spec:
-  serviceName: {{ .Values.flashcard.service.name}}
+  serviceName: {{ .Values.flashcard.service.name }}
   selector:
     matchLabels:
       stack: backend
