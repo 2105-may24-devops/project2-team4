@@ -25,7 +25,7 @@ node() {
         def meetsRequirements = load("jenkins/requirements.groovy").checkRequirements(requirements)
         if (!meetsRequirements) {
             currentBuild.result = 'ABORTED'
-            error("Agent doesn't meet requirements")
+            error("Agent $NODE_NAME doesn't meet requirements")
         }
         def artifactsExist = load("jenkins/lastBuildWithArtifacts.groovy")
         def changes = load("jenkins/changes.groovy")
