@@ -67,19 +67,25 @@ stages:
     steps:
     - task: HelmDeploy@0
       inputs:
+        command: 'package'
+        chartPath: './helm/testchart/Chart.yaml'
+        destination: './helm/'
+    - script: find | grep helm
+    - task: HelmDeploy@0
+      inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceConnection: 'team4cluster'
         command: 'install'
         chartType: 'FilePath'
-        chartPath: './helm/testchart/Chart.yaml'
+        chartPath: './helm/'
         releaseName: 'testdeploy'
         overrideValues: |
           flashcard.deploy.image.name=team4containers.azurecr.io/flashcard-service
           flashcard.deploy.image.tag=latest
           quiz.enabled=false
           gateway.enabled=false
-
         valueFile: './helm/testchart/values.yaml'
+
 
 #       - task: Kubernetes@1
 #         inputs:
