@@ -107,7 +107,9 @@ node() {
         }
         parallel(parallelDocker)
 
-        discord.sendDiscordMessage(discord.createDescription(dockerChangeSet, serviceChangeSet))
+        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet)
+        println desc
+        discord.sendDiscordMessage(desc)
     }
 
     // test -- deploy on minikube cluster and test using postman
