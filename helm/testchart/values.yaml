@@ -1,4 +1,5 @@
 flashcard:
+  enabled: true
   port: 8089
   deploy:
     replicas: 2
@@ -9,13 +10,14 @@ flashcard:
     resources:
       limits:
         memory: 1Gi
-        cpu: 100m
+        cpu: 200m
   service:
     name: flashcard-svc
     type: ClusterIP
     portName: fc-port
 
 quiz:
+  enabled: true
   port: 8090
   deploy:
     replicas: 1
@@ -33,6 +35,7 @@ quiz:
     portName: quiz-port
 
 gateway:
+  enabled: true
   port: 8080
   deploy:
     replicas: 1
@@ -43,7 +46,7 @@ gateway:
     resources:
       limits:
         memory: 1Gi
-        cpu: 500m
+        cpu: 300m
   service:
     name: gateway-svc
     type: LoadBalancer
@@ -107,7 +110,7 @@ consul:
         cpu: 200m
   service:
     name: consul-svc
-    type: ClusterIP
+    type: LoadBalancer
     ports:
       name: consul-svc-port
 

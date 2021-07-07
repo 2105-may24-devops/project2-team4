@@ -1,3 +1,4 @@
+{{- if .Values.flashcard.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -38,12 +39,12 @@ spec:
       containers:
       - name: flashcard
         image: {{ .deploy.image.name }}:{{ .deploy.image.tag }}
-        {{- with .deploy.resources}}
-        resources:
-          limits:
-            memory: {{ .limits.memory | quote }}
-            cpu: {{ .limits.cpu | quote }}
-        {{- end }}
+        # {{- with .deploy.resources}}
+        # resources:
+        #   limits:
+        #     memory: {{ .limits.memory | quote }}
+        #     cpu: {{ .limits.cpu | quote }}
+        # {{- end }}
         ports:
         - containerPort: {{ .port }}
   {{- end }}
@@ -68,3 +69,4 @@ spec:
         persistentVolumeClaim:
           claimName: {{ .Values.volumes.fcdbVol.name }}
       {{- end }}
+{{- end }}
