@@ -12,8 +12,7 @@ def createDescription(dockerChanges, serviceChanges) {
 
 
 def sendDiscordMessage(msg) {
-    println msg
-    discordSend description: "Node Name: $NODE_NAME \nJob Name: $JOB_NAME \nBuild Number: $BUILD_NUMBER\n Build ID: $BUILD_ID \n", 
+    discordSend description: msg, 
         footer: 'something here.', 
         image: '', 
         link: "http://52.142.60.104:8080/jenkins/job/project2-team4/job/$BRANCH_NAME/", 
@@ -21,7 +20,7 @@ def sendDiscordMessage(msg) {
         thumbnail: 'https://www.jenkins.io/images/logos/pixelart/jenkins-pixelart-32.png', 
         title: 'Team4-P2',
         // create env
-        webhookURL: ${env.discord_webhook}
+        webhookURL: "${env.discord_webhook}"
 }
 
 return this
