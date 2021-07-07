@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment # maybe zookeeper should be a statefulSet
 metadata:
   name: {{ .Values.zookeeper.deploy.name }}
-  namespace: {{ .Values.mynamespace }}
 spec:
 {{- with .Values.zookeeper }}
   selector:
@@ -23,7 +22,7 @@ spec:
         env:
         - name: ALLOW_ANONYMOUS_LOGIN #hard-coding here is fine, I think.
           value: "yes"
-        {{- with deploy.resources }}
+        {{- with .deploy.resources }}
         resources:
           limits:
             memory: {{ .limits.memory | quote }}

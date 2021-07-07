@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment # maybe kafka should be stateful in case of interruption of messaging
 metadata:
   name: kafka-deploy
-  namespace: {{ .Values.mynamespace }}
 spec:
 {{- with .Values.kafka }}
   selector:
@@ -20,7 +19,7 @@ spec:
         image: bitnami/kafka:{{ .deploy.imageTag }}
         ports:
         - containerPort: {{ .port }}
-        {{- with deploy.resources }}
+        {{- with .deploy.resources }}
         resources:
           limits:
             memory: {{ .limits.memory | quote }}
@@ -30,5 +29,5 @@ spec:
         env:
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"
-        - name: KAFKA_CFG_ZOOKEEPER_CONNECT
-          value: {{ .Values.zookeeper.service.name }}:{{ .Values.zookeeeper.port }}
+        - name: KAFKA_CFG_ZOOKEEPER_CONNECTD
+          value: {{ printf "%s:%s" .Values.zookeeper.service.name  .Values.zookeeper.port }}

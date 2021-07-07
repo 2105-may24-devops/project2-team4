@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment # maybe zookeeper should be a statefulSet
 metadata:
   name: {{ .Values.consul.deploy.name }}
-  namespace: {{ .Values.mynamespace }}
+
 spec:
   selector:
     matchLabels:

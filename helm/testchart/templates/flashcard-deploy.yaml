@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ .Values.flashcard.deploy.name }}
-  namespace: {{ .Values.mynamespace }}
 spec:
   serviceName: {{ .Values.flashcard.service.name}}
   selector:
@@ -46,7 +45,7 @@ spec:
         ports:
         - containerPort: {{ .port }}
   {{- end }}
-  {{- if .Values.config.db-cm.inFile}}
+  {{- if .Values.config.dbcm.inFile}}
         volumeMounts: 
         - name: embed-db
           mountPath: /app/dbdata/
@@ -60,7 +59,7 @@ spec:
         - configMapRef:
             name: {{ .Values.config.consul.name }}
         - configMapRef:
-            name: {{ .Values.config.db-cm.name }}
+            name: {{ .Values.config.dbcm.name }}
   
       volumes: 
       - name: embed-db 

@@ -1,5 +1,4 @@
-mynamespace: mdtest1
-# namespace: {{ .Values.mynamespace }}
+
 flashcard:
   port: 8089
   deploy:
@@ -52,7 +51,7 @@ gateway:
 config:
   consul:
     name: consul-connection
-  db-cm:
+  dbcm:
     name: db-info
     inFile: true
 
