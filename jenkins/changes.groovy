@@ -32,8 +32,8 @@ def findChangedServices() {
 @NonCPS
 def findChangedDockerfiles() {
     def dockerChanges = ["flashcard-service": ['flashcard.Dockerfile', false],
-                       "gateway-service": ['gateway.Dockerfile', false],
-                       "quiz-service": ['quiz.Dockerfile', false]]
+                         "gateway-service": ['gateway.Dockerfile', false],
+                         "quiz-service": ['quiz.Dockerfile', false]]
     def list = currentBuild.changeSets
     for (int i=0; i < list.size(); i++) {
         // println "${list[i]}, ${list[i].getClass()}, ${list[i].getKind()}"
