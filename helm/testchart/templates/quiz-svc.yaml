@@ -9,4 +9,4 @@ spec:
     app: quiz
   ports:
   - port: {{ .Values.quiz.port }}
-    name: {{ .Values.quiz.service.portName}}
+    name: {{ .Values.quiz.service.portName }}

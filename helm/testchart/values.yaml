@@ -1,4 +1,3 @@
-
 flashcard:
   port: 8089
   deploy:
@@ -83,6 +82,7 @@ zookeeper:
 kafka:
   port: 9092
   deploy:
+    name: kafka-deploy
     imageTag: latest
     resources:
       limits: 
