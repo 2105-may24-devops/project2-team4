@@ -36,7 +36,7 @@ stages:
     Dockerfile: 'dockerize/flashcard.Dockerfile'
     artifact: $(service)
     tags: "$(service)-$(Build.SourceVersion)"
-
+    repository: 'team4revops/$(service)'
 - template: ./docker-stage-template.yml
   parameters:
     stage: LatestImage
