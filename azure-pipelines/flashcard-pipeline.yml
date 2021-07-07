@@ -80,10 +80,10 @@ stages:
         chartPath: './helm/'
         releaseName: 'testdeploy'
         overrideValues: |
-          flashcard.deploy.image.name=team4containers.azurecr.io/flashcard-service
-          flashcard.deploy.image.tag=latest
-          quiz.enabled=false
-          gateway.enabled=false
+            flashcard.deploy.image.name=team4containers.azurecr.io/flashcard-service
+            flashcard.deploy.image.tag=latest
+            quiz.enabled=false
+            gateway.enabled=false
         valueFile: './helm/testchart/values.yaml'
 
 
