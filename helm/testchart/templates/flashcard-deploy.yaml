@@ -11,6 +11,7 @@ spec:
   replicas: {{ .Values.flashcard.deploy.replicas }}
   # strategy:
   #   type: RollingUpdate
+  {{- if .Values.config.dbcm.inFile }}
   volumeClaimTemplates:
   {{- with .Values.volumes.fcdbVol }}
     - apiVersion: v1
@@ -26,6 +27,7 @@ spec:
         accessModes:
           - {{ .access }}
   {{- end}}
+  {{- end }}
   template:
   {{- with .Values.flashcard }}
     metadata:
@@ -45,7 +47,7 @@ spec:
         ports:
         - containerPort: {{ .port }}
   {{- end }}
-  {{- if .Values.config.dbcm.inFile}}
+  {{- if .Values.config.dbcm.inFile }}
         volumeMounts: 
         - name: embed-db
           mountPath: /app/dbdata/
@@ -60,8 +62,9 @@ spec:
             name: {{ .Values.config.consul.name }}
         - configMapRef:
             name: {{ .Values.config.dbcm.name }}
-  
+      {{- if .Values.config.dbcm.inFile }}
       volumes: 
       - name: embed-db 
         persistentVolumeClaim:
           claimName: {{ .Values.volumes.fcdbVol.name }}
+      {{- end }}
