@@ -10,3 +10,5 @@ def sendDiscordMessage() {
         title: 'Team4-P2', 
         webhookURL: 'https://discord.com/api/webhooks/856587514218545203/OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
 }
+
+return this

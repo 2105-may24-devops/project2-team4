@@ -29,7 +29,7 @@ node() {
         }
         def artifactsExist = load("jenkins/lastBuildWithArtifacts.groovy")
         def changes = load("jenkins/changes.groovy")
-        def discord = load("jenkins/sendDiscordMessage")
+        def discord = load("jenkins/discord.groovy")
         // find which services were updated in the most recent push and only run sonarcloud analysis on those.
         // println "${currentBuild.changeSets}, ${currentBuild.changeSets.getClass()}"
 
