@@ -84,6 +84,8 @@ node("master") {
     ]
 
     def serviceChangeSet
+
+    def artifactsExist = load("vars/lastBuildWithArtifacts.groovy") 
     stage("Build, Test and Analyze") {
         sh "echo $BRANCH_NAME"
         println "${env.flashcard_build} build id"
@@ -98,7 +100,7 @@ node("master") {
 
         // compile, test and analyze all three services so that build artifacts for all services can be created
         // if they do not all exist
-        if (currentBuild.previousSuccessfulBuild == null) {
+        if (currentBuild.previousSuccessfulBuild == null || !artifactsExist.artifactsExist("$BRANCH_NAME")) {
             for (key in serviceChangeSet.keySet()) {
                 serviceChangeSet[key] = true
             }
