@@ -35,6 +35,7 @@ stages:
     Dockerfile: 'dockerize/flashcard.Dockerfile'
     artifact: $(service)
     tags: "$(service)-$(Build.SourceVersion)"
+    repository: team4-azure-containers
 
 - template: ./docker-stage-template.yml
   parameters:
