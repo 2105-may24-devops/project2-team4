@@ -12,7 +12,8 @@ def createDescription(dockerChanges, serviceChanges) {
 
 
 def sendDiscordMessage(msg) {
-    discordSend description: "$msg", 
+    println msg
+    discordSend description: "Node Name: $NODE_NAME \nJob Name: $JOB_NAME \nBuild Number: $BUILD_NUMBER\n Build ID: $BUILD_ID \n", 
         footer: 'something here.', 
         image: '', 
         link: "http://52.142.60.104:8080/jenkins/job/project2-team4/job/$BRANCH_NAME/", 
