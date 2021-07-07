@@ -64,3 +64,5 @@ def findChangedDockerfiles() {
     }
     return dockerChanges
 }
+
+return this
