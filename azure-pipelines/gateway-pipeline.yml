@@ -40,4 +40,4 @@ stages:
     Dockerfile: 'dockerize/flashcard.Dockerfile'
     artifact: $(service)
     tags: latest
-    repository: 'team4revops/$(service)'
+    repository: "team4revops/$(service)"
