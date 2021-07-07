@@ -1,8 +1,8 @@
 #!/usr/bin/env groovy
 @NonCPS
 def capitalizeServiceName(serviceName) {
-    def split = key.split("-")
-        return "${split[0].charAt(0).toUpperCase()}${split[0].substring(1)} ${split[0].charAt(0).toUpperCase()}${split[0].substring(1)}"
+    def split = serviceName.split("-")
+    return "${split[0].charAt(0).toUpperCase()}${split[0].substring(1)} ${split[0].charAt(0).toUpperCase()}${split[0].substring(1)}"
 }
 
 def createDescription(dockerChanges, serviceChanges) {
