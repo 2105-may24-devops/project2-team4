@@ -69,7 +69,7 @@ stages:
       inputs:
         command: 'package'
         chartPath: './helm/testchart/Chart.yaml'
-        destination: './helm/'
+        destination: './helm/Chart.yaml'
     - script: find | grep helm
     - task: HelmDeploy@0
       inputs:
