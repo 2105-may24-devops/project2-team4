@@ -1,4 +1,9 @@
 #!/usr/bin/env groovy
+@NonCPS
+def capitalizeServiceName(serviceName) {
+    def split = key.split("-")
+        return "${split[0].charAt(0).toUpperCase()}${split[0].substring(1)} ${split[0].charAt(0).toUpperCase()}${split[0].substring(1)}"
+}
 
 def createDescription(dockerChanges, serviceChanges) {
     // both dockerChanges and serviceChanges must have the same keys 
@@ -6,8 +11,7 @@ def createDescription(dockerChanges, serviceChanges) {
 
     for (key in dockerChanges.keySet()) {
         // capitalize service names
-        def split = key.split("-")
-        def serviceName = "${split[0].charAt(0).toUpperCase()}${split[0].substring(1)} ${split[0].charAt(0).toUpperCase()}${split[0].substring(1)}"
+        def serviceName = capitalizeServiceName(key)
         description = "${description}${serviceName}: ${ dockerChanges[key][1] || serviceChanges[key] ? 'Updated' : 'Unchanged' } \n"
     }
     return description
