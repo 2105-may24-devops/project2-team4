@@ -79,7 +79,7 @@ stages:
           quiz.enabled=false
           gateway.enabled=false
 
-        valueFile: './helm/testchart/values.yml'
+        valueFile: './helm/testchart/values.yaml'
 
 #       - task: Kubernetes@1
 #         inputs:
