@@ -30,15 +30,16 @@ stages:
 
 - template: ./docker-stage-template.yml
   parameters:
+    stage: CommitImage
     displayName: '${{ variables.service }} Image Build and Push to ACR/Dockerhub'
     targetPath: './dockerize'
     Dockerfile: 'dockerize/flashcard.Dockerfile'
     artifact: $(service)
     tags: "$(service)-$(Build.SourceVersion)"
-    repository: team4-azure-containers
 
 - template: ./docker-stage-template.yml
   parameters:
+    stage: LatestImage
     displayName: '${{ variables.service }} Image Build and Push to ACR/Dockerhub'
     targetPath: './dockerize'
     Dockerfile: 'dockerize/flashcard.Dockerfile'
