@@ -2,7 +2,7 @@
 @NonCPS
 def capitalizeServiceName(serviceName) {
     def split = serviceName.split("-")
-    return "${split[0].charAt(0).toUpperCase()}${split[0].substring(1)} ${split[0].charAt(0).toUpperCase()}${split[0].substring(1)}"
+    return "${split[0].charAt(0).toUpperCase()}${split[0].substring(1)} ${split[1].charAt(0).toUpperCase()}${split[1].substring(1)}"
 }
 
 def createDescription(dockerChanges, serviceChanges) {
