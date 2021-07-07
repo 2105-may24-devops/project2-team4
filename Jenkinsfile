@@ -86,12 +86,13 @@ node("master") {
     def serviceChangeSet
 
     def artifactsExist = load("vars/lastBuildWithArtifacts.groovy") 
+
     stage("Build, Test and Analyze") {
         sh "echo $BRANCH_NAME"
         println "${env.flashcard_build} build id"
         // env.flashcard_build = "161"
         def checkout_details = checkout scm
-        println checkout_details["GIT_COMMIT"]
+        def artifactsExist = load("vars/lastBuildWithArtifacts.groovy") 
         // find which services were updated in the most recent push and only run sonarcloud analysis on those.
         // println "${currentBuild.changeSets}, ${currentBuild.changeSets.getClass()}"
 
