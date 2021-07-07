@@ -3,11 +3,9 @@ def getMapValue(jarMap, key) {
     return jarMap[key]
 }
 
-
-
-node("master") {
+node() {
     // add to env files
-    def requirements = ["mvn", "docker", "kubectl", "minikube"] // add newman
+    def requirements = ["mvn", "docker"] // "kubectl", "minikube"] // add newman
     def sonarProjectKeys = ["flashcard-service": "2105-may24-devops-p2t4-flashcard",
                             "gateway-service": "2105-may24-devops_p2t4-gateway",
                             "quiz-service": "2105-may24-devops-p2t4-quiz"]
@@ -24,13 +22,14 @@ node("master") {
 
         def checkout_details = checkout scm
 
-        def meetsRequirements = load("vars/requirements.groovy").checkRequirements(requirements)
+        def meetsRequirements = load("jenkins/requirements.groovy").checkRequirements(requirements)
         if (!meetsRequirements) {
             currentBuild.result = 'ABORTED'
             error("Agent doesn't meet requirements")
         }
-        def artifactsExist = load("vars/lastBuildWithArtifacts.groovy") 
-        def changes = load("vars/changes.groovy")
+        def artifactsExist = load("jenkins/lastBuildWithArtifacts.groovy")
+        def changes = load("jenkins/changes.groovy")
+        def discord = load("jenkins/sendDiscordMessage")
         // find which services were updated in the most recent push and only run sonarcloud analysis on those.
         // println "${currentBuild.changeSets}, ${currentBuild.changeSets.getClass()}"
 
@@ -107,8 +106,10 @@ node("master") {
             }
         }
         parallel(parallelDocker)
+
+        discord.sendDiscordMessage()
     }
 
     // test -- deploy on minikube cluster and test using postman
-    stage("Test")
+    // stage("Test")
 }
