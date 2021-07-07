@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.consul.service.name }}
+  name: {{ .Values.consul.service.name }}
 spec:
   selector:
     stack: dependency
