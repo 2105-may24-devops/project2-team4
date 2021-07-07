@@ -17,7 +17,7 @@ spec:
     - apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        name: {{ .name }}-sset
+        name: {{ .name }}
       spec:
         storageClassName: {{ .storageClassName }}
         resources:
@@ -49,7 +49,7 @@ spec:
   {{- end }}
   {{- if .Values.config.dbcm.inFile }}
         volumeMounts: 
-        - name: embed-db
+        - name: {{ .Values.volumes.fcdbVol.name }}
           mountPath: /app/dbdata/
   {{- end }}
         env:
@@ -62,9 +62,9 @@ spec:
             name: {{ .Values.config.consul.name }}
         - configMapRef:
             name: {{ .Values.config.dbcm.name }}
-      {{- if .Values.config.dbcm.inFile }}
+      {{- if and .Values.config.dbcm.inFile false }}
       volumes: 
-      - name: embed-db 
+      - name: {{ .Values.volumes.fcdbVol.name }}
         persistentVolumeClaim:
           claimName: {{ .Values.volumes.fcdbVol.name }}
       {{- end }}

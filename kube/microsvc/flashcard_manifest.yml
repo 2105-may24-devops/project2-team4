@@ -40,7 +40,7 @@ spec:
         ports:
         - containerPort: 8089
         volumeMounts: 
-        - name: embed-db
+        - name: fcdb-pvc
           mountPath: /app/dbdata/
         env:
         - name: spring.kafka.consumer.bootstrap-servers
@@ -52,10 +52,6 @@ spec:
             name: consul-connection
         - configMapRef:
             name: db-info
-      volumes: 
-      - name: embed-db 
-        persistentVolumeClaim:
-          claimName: fcdb-pvc
 
 ---
 apiVersion: v1
