@@ -32,7 +32,8 @@ stages:
     targetPath: './dockerize'
     Dockerfile: 'dockerize/quiz.Dockerfile'
     artifact: $(service)
-    tags: "$(service)-$(Build.SourceVersion)"
+    tags: "$(Build.SourceVersion)"
+    repository: "team4revops/$(service)"
 
 - template: ./docker-stage-template.yml
   parameters:

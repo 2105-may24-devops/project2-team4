@@ -31,7 +31,7 @@ stages:
     - task: Docker@2
       inputs:
         containerRegistry: 'team4-azure-containers'
-        repository: 'team4containers.azurecr.io/$(service)'
+        repository: $(service)
         command: 'buildAndPush'
         Dockerfile: ${{ parameters.Dockerfile }}
         tags: ${{ parameters.tags }}
