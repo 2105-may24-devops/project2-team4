@@ -1,8 +1,8 @@
+{{- if .Values.config.dbcm.inFile }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ .Values.volumes.fcdbVol.name }}
-  namespace: {{ .Values.mynamespace }}
 spec:
 {{- with .Values.volumes.fcdbVol }}
   storageClassName: {{ .storageClassName }}
@@ -12,4 +12,5 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - {{ .access }}
+{{- end }}
 {{- end }}

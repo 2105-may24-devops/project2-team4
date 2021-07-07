@@ -1,8 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: quiz-deploy
-  namespace: {{ .Values.mynamespace }}
+  name: {{ .Values.quiz.deploy.name }}
 spec:
   replicas: {{ .Values.quiz.deploy.replicas }}
   selector:

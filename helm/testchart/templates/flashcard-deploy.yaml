@@ -2,9 +2,8 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ .Values.flashcard.deploy.name }}
-  namespace: {{ .Values.mynamespace }}
 spec:
-  serviceName: {{ .Values.flashcard.service.name}}
+  serviceName: {{ .Values.flashcard.service.name }}
   selector:
     matchLabels:
       stack: backend
@@ -12,12 +11,13 @@ spec:
   replicas: {{ .Values.flashcard.deploy.replicas }}
   # strategy:
   #   type: RollingUpdate
+  {{- if .Values.config.dbcm.inFile }}
   volumeClaimTemplates:
   {{- with .Values.volumes.fcdbVol }}
     - apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        name: {{ .name }}-sset
+        name: {{ .name }}
       spec:
         storageClassName: {{ .storageClassName }}
         resources:
@@ -27,6 +27,7 @@ spec:
         accessModes:
           - {{ .access }}
   {{- end}}
+  {{- end }}
   template:
   {{- with .Values.flashcard }}
     metadata:
@@ -46,9 +47,9 @@ spec:
         ports:
         - containerPort: {{ .port }}
   {{- end }}
-  {{- if .Values.config.db-cm.inFile}}
+  {{- if .Values.config.dbcm.inFile }}
         volumeMounts: 
-        - name: embed-db
+        - name: {{ .Values.volumes.fcdbVol.name }}
           mountPath: /app/dbdata/
   {{- end }}
         env:
@@ -60,9 +61,10 @@ spec:
         - configMapRef:
             name: {{ .Values.config.consul.name }}
         - configMapRef:
-            name: {{ .Values.config.db-cm.name }}
-  
+            name: {{ .Values.config.dbcm.name }}
+      {{- if and .Values.config.dbcm.inFile false }}
       volumes: 
-      - name: embed-db 
+      - name: {{ .Values.volumes.fcdbVol.name }}
         persistentVolumeClaim:
           claimName: {{ .Values.volumes.fcdbVol.name }}
+      {{- end }}
