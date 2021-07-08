@@ -10,8 +10,6 @@ parameters:
     type: string
   - name: 'disableSvc1'
     type: string
-  - name: 'disableSvc2'
-    type: string
   - name: 'activeSvc'
     type: string
   
@@ -44,6 +42,5 @@ stages:
           ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
           ${{ parameters.disableSvc1 }}.enabled=false
-          ${{ parameters.disableSvc2 }}.enabled=false
           ${{ parameters.activeSvc }}.enabled=true
         valueFile: './helm/testchart/values.yaml'
