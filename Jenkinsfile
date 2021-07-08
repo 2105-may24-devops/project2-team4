@@ -116,7 +116,7 @@ node() {
     stage("Deploy to AKS Test Environment") {
         sh "ls"
         sh "helm upgrade test helm/testchart -i"
-        deployStatus = sh "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
+        deployStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
         if (deployStatus == 1) {
             currentBuild.result = 'FAILURE'
             error("Jenkins failed to deploy project to development AKS cluster")
