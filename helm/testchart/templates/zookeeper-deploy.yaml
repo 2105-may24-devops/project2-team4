@@ -1,16 +1,19 @@
+{{- if or .Values.deployAll .Values.kafka.enabled }}
 apiVersion: apps/v1
 kind: Deployment # maybe zookeeper should be a statefulSet
 metadata:
   name: {{ .Values.zookeeper.deploy.name }}
 spec:
-{{- with .Values.zookeeper }}
+  {{- with .Values.zookeeper }}
   selector:
     matchLabels:
       stack: dependency
       app: zoo
+      {{- include "testchart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
+        {{- include "testchart.selectorLabels" . | nindent 8 }}
         stack: dependency
         app: zoo
     spec:
@@ -28,4 +31,5 @@ spec:
             memory: {{ .limits.memory | quote }}
             cpu: {{ .limits.cpu | quote }}
         {{- end }}
+  {{- end }}
 {{- end }}

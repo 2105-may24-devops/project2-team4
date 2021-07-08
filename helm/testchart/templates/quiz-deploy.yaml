@@ -1,4 +1,4 @@
-{{- if .Values.quiz.enabled }}
+{{- if or .Values.deployAll .Values.quiz.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,11 +7,13 @@ spec:
   replicas: {{ .Values.quiz.deploy.replicas }}
   selector:
     matchLabels:
+      {{- include "testchart.selectorLabels" . | nindent 6 }}
       stack: backend
       app: quiz
   template:
     metadata:
       labels:
+        {{- include "testchart.selectorLabels" . | nindent 4 }}
         stack: backend
         app: quiz
     spec:

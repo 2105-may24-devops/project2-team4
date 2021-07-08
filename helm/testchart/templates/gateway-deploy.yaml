@@ -1,4 +1,4 @@
-{{- if .Values.gateway.enabled }}
+{{- if or .Values.deployAll .Values.gateway.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,6 +7,7 @@ spec:
   replicas: {{ .Values.gateway.deploy.replicas }}
   selector:
     matchLabels:
+      {{- include "testchart.selectorLabels" . | nindent 6 }}
       stack: backend
       app: gateway
   template:
@@ -14,6 +15,7 @@ spec:
       labels:
         stack: backend
         app: gateway
+        {{- include "testchart.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.gateway }}
       containers:

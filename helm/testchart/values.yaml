@@ -1,5 +1,10 @@
+# deployAll - set to true for first-time deployments on a clean cluster, or false for deploying a single thing.
+deployAll: true
+# nameOverride: null
+# namePrefix: null
+
 flashcard:
-  enabled: true
+  enabled: false
   port: 8089
   deploy:
     replicas: 2
@@ -34,8 +39,11 @@ quiz:
     type: ClusterIP
     portName: quiz-port
 
-gateway:
+ingress:
   enabled: true
+
+gateway:
+  enabled: false
   port: 8080
   deploy:
     replicas: 1
@@ -70,6 +78,7 @@ volumes:
     access: ReadWriteOnce
 
 zookeeper:
+  # enabling is linked to kafka, since kafka is the only one dependent on this.
   port: 2181
   deploy:
     name: zookeeper-deploy
@@ -85,6 +94,8 @@ zookeeper:
       name: zookeeper-port
 
 kafka:
+  # flashcard microservice will fail without kafka.
+  enabled: false
   port: 9092
   deploy:
     name: kafka-deploy
@@ -100,6 +111,7 @@ kafka:
       name: kafka-svc-port
   
 consul:
+  enabled: false
   port: 8500
   deploy:
     name: consul-deploy
@@ -110,7 +122,7 @@ consul:
         cpu: 200m
   service:
     name: consul-svc
-    type: LoadBalancer
+    type: ClusterIP
     ports:
       name: consul-svc-port
 

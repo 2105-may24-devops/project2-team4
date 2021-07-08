@@ -24,6 +24,6 @@ version: 0.1.0
 appVersion: "1.0.0"
 
 # dependencies:
-#   - name: consul
-#     version: 1.10.0
-#     repository: "https://helm.releases.hashicorp.com"
+#   - name: ingress-nginx
+#     version: 3.34.0
+#     repository: "https://kubernetes.github.io/ingress-nginx"

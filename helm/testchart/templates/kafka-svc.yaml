@@ -1,15 +1,17 @@
+{{- if or .Values.deployAll .Values.kafka.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.kafka.service.name }}
 spec:
-{{- with .Values.kafka }}
+  {{- with .Values.kafka }}
   selector:
+    {{- include "testchart.selectorLabels" . | nindent 4 }}
     stack: dependency
     app: kafka
   type: {{ .service.type }}
   ports:
   - port: {{ .port }}
     name: {{ .service.ports.name }}
+  {{- end }}
 {{- end }}
-    

@@ -1,12 +1,17 @@
+{{- if or .Values.deployAll .Values.consul.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.consul.service.name }}
+  labels:
+    {{- include "testchart.selectorLabels" . | nindent 4 }}
 spec:
   selector:
     stack: dependency
     app: consul
+    {{- include "testchart.selectorLabels" . | nindent 4 }}
   type: {{.Values.consul.service.type }}
   ports:
   - port: {{ .Values.consul.port }}
     name: {{ .Values.consul.service.ports.name }}
+{{- end }}

@@ -1,4 +1,4 @@
-{{- if .Values.gateway.enabled }}
+{{- if or .Values.deployAll .Values.gateway.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -6,6 +6,7 @@ metadata:
 spec:
   type: {{ .Values.gateway.service.type }}
   selector:
+    {{- include "testchart.selectorLabels" . | nindent 4 }}
     stack: backend
     app: gateway
   ports:

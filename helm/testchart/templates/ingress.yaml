@@ -1,19 +1,25 @@
+{{- if and .Values.deployAll .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: myingress
+  name: {{ .Values.ingress.name }}
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: "/$2"
   labels:
+    {{- include "testchart.selectorLabels" . | nindent 4 }}
     name: gateway
 spec:
+  {{- if .Values.gateway.enabled }}
+  {{- with .Values.gateway.service }}
   defaultBackend:
     service:
-      name: gateway-svc
+      name: {{ .name }}
       port:
-        name: entrypoint
+        name: {{ .portName }}
+  {{- end }}
+  {{- end }}
   rules:
     # host: <Host> #Placeholder. Dunno what to put. may be optional.
   - http:
@@ -21,14 +27,19 @@ spec:
       - pathType: Prefix
         path: "/flashcard(/|$)(.*)"
         backend:
+          {{- with .Values.flashcard.service }}
           service:
-            name: flashcard-svc
+            name: {{ .name }}
             port: 
-              name: fc-port
+              name: {{ .portName }}
+          {{- end }}
       - pathType: Prefix
         path: "/quiz(/|$)(.*)"
         backend:
+          {{- with .Values.quiz.service }}
           service:
-            name: quiz-svc
+            name: {{ .name }}
             port: 
-              name: quiz-port
+              name: {{ .portName }}
+          {{- end }}
+{{- end }}
