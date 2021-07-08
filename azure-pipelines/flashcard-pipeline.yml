@@ -49,41 +49,51 @@ stages:
 
 # Deployment Helm
 
+- template: ./helm-deploy-template.yml
+  parameters:
+    containerName: team4revops
+    imageName: $(service)
+    tag: latest
+    helmCommand: Upgrade
+    disableSvc1: quiz
+    disableSvc2: gateway
+    activeSvc: flashcard
+  
 
-- stage:
-  displayName: Deployyyy
-  dependsOn: 
-    - LatestImage
-    - CommitImage
-  variables:
-    - name: 'container'
-      value: team4revops
-    - name: 'image'
-      value: $(service)
-    - name: 'tag'
-      value: latest
-  jobs:
-  - job: ApplyAndDeploy
-    steps:
-    - task: HelmDeploy@0
-      inputs:
-        command: 'package'
-        chartPath: './helm/testchart/'
-        destination: './helm/'
-    - script: find | grep helm
-    - task: HelmDeploy@0
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceConnection: 'team4cluster'
-        command: 'install'
-        chartType: 'FilePath'
-        chartPath: './helm/testchart-0.1.0.tgz'
-        overrideValues: |
-          flashcard.deploy.image.name=$(container)/$(image)
-          flashcard.deploy.image.tag=$(tag)
-          quiz.enabled=false
-          gateway.enabled=false
-        valueFile: './helm/testchart/values.yaml'
+# - stage:
+#   displayName: Deployyyy
+#   dependsOn: 
+#     - LatestImage
+#     - CommitImage
+#   variables:
+#     - name: 'container'
+#       value: team4revops
+#     - name: 'image'
+#       value: $(service)
+#     - name: 'tag'
+#       value: latest
+#   jobs:
+#   - job: ApplyAndDeploy
+#     steps:
+#     - task: HelmDeploy@0
+#       inputs:
+#         command: 'package'
+#         chartPath: './helm/testchart/'
+#         destination: './helm/'
+#     - script: find | grep helm
+#     - task: HelmDeploy@0
+#       inputs:
+#         connectionType: 'Kubernetes Service Connection'
+#         kubernetesServiceConnection: 'team4cluster'
+#         command: 'install'
+#         chartType: 'FilePath'
+#         chartPath: './helm/testchart-0.1.0.tgz'
+#         overrideValues: |
+#           flashcard.deploy.image.name=$(container)/$(image)
+#           flashcard.deploy.image.tag=$(tag)
+#           quiz.enabled=false
+#           gateway.enabled=false
+#         valueFile: './helm/testchart/values.yaml'
 
 
 #       - task: Kubernetes@1

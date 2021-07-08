@@ -44,3 +44,13 @@ stages:
     artifact: $(service)
     tags: latest
     repository: "team4revops/$(service)"
+
+- template: ./helm-deploy-template.yml
+  parameters:
+    containerName: team4revops
+    imageName: $(service)
+    tag: latest
+    helmCommand: Upgrade
+    disableSvc1: flashcard
+    disableSvc2: gateway
+    activeSvc: quiz

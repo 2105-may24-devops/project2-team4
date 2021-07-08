@@ -1,0 +1,47 @@
+
+parameters:
+  - name: 'containerName'
+    type: string
+  - name: 'imageName'
+    type: string
+  - name: 'tag'
+    type: string
+  - name: 'helmCommand'
+    type: string
+  - name: 'disableSvc1'
+    type: string
+  - name: 'disableSvc2'
+    type: string
+  - name: 'activeSvc'
+    type: string
+  
+
+
+stages:
+- stage:
+  displayName: Deployyyy
+  dependsOn: 
+    - LatestImage
+    - CommitImage
+  jobs:
+  - job: ApplyAndDeploy
+    steps:
+    - task: HelmDeploy@0
+      inputs:
+        command: 'package'
+        chartPath: './helm/testchart/'
+        destination: './helm/'
+    - script: find | grep helm
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: 'team4cluster'
+        command: '${{ parameters.helmCommand }} '
+        chartType: 'FilePath'
+        chartPath: './helm/testchart-0.1.0.tgz'
+        overrideValues: |
+          ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName }}/${{ parameters.imageName }}
+          ${{ parameters.activeSvc }}=${{ parameters.tag }}
+          ${{ parameters.disableSvc1 }}.enabled=false
+          ${{ parameters.disableSvc2 }}.enabled=false
+        valueFile: './helm/testchart/values.yaml'
