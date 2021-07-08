@@ -1,7 +1,11 @@
+{{- if or .Values.deployAll .Values.flashcard.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.config.dbcm.name }}
+  labels: 
+    {{- include "testchart.selectorLabels" . | nindent 4 }}
 data: 
   # Database Credentials
   spring.datasource.url: jdbc:h2:{{ printf "%s:%sfcdb" (ternary "file" "mem" .Values.config.dbcm.inFile) (ternary .Values.volumes.fcdbVol.mountPath "" .Values.config.dbcm.inFile) }}
+{{- end }}
