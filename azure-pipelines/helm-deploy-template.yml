@@ -44,4 +44,5 @@ stages:
           ${{ parameters.activeSvc }}=${{ parameters.tag }}
           ${{ parameters.disableSvc1 }}.enabled=false
           ${{ parameters.disableSvc2 }}.enabled=false
+          ${{ parameters.activeSvc }}.enabled=true
         valueFile: './helm/testchart/values.yaml'
