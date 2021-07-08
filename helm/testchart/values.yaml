@@ -22,7 +22,7 @@ flashcard:
     portName: fc-port
 
 quiz:
-  enabled: true
+  enabled: false
   port: 8090
   deploy:
     replicas: 1
