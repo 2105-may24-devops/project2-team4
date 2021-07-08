@@ -1,0 +1,12 @@
+resources:
+
+trigger:
+  pipeline:
+
+
+stages:
+- stage:
+  displayName: Deployyyy
+  dependsOn: 
+    - LatestImage
+    - CommitImage
