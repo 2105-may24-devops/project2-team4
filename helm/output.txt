@@ -1,11 +1,3 @@
-NAME: test2
-LAST DEPLOYED: Wed Jul  7 13:55:13 2021
-NAMESPACE: mdtest
-STATUS: pending-install
-REVISION: 1
-TEST SUITE: None
-HOOKS:
-MANIFEST:
 ---
 # Source: testchart/templates/consul-config.yaml
 apiVersion: v1
@@ -158,7 +150,7 @@ spec:
         resources:
           limits:
             memory: "1Gi"
-            cpu: "500m"
+            cpu: "300m"
         ports:
         - containerPort: 8080
         env: 
@@ -297,10 +289,12 @@ spec:
       containers:
       - name: flashcard
         image: mdarmawan/flashcard:mdtest
-        resources:
-          limits:
-            memory: "1Gi"
-            cpu: "100m"
+        #
+        # resources:
+        #   limits:
+        #     memory: "1Gi"
+        #     cpu: "200m"
+        #
         ports:
         - containerPort: 8089
         volumeMounts: 
@@ -316,7 +310,34 @@ spec:
             name: consul-connection
         - configMapRef:
             name: db-info
-
-NOTES:
-This is HelpText
-Release Name is test2
+---
+# Source: testchart/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: 
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+  labels:
+    name: gateway
+spec:
+  rules:
+    # host: <Host> #Placeholder. Dunno what to put. may be optional.
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/flashcard(/|$)(.*)"
+        backend:
+          service:
+            name: flashcard-svc
+            port: 
+              name: fc-port
+      - pathType: Prefix
+        path: "/quiz(/|$)(.*)"
+        backend:
+          service:
+            name: quiz-svc
+            port: 
+              name: quiz-port

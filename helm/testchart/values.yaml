@@ -41,6 +41,7 @@ quiz:
 
 ingress:
   enabled: true
+  name: myingress
 
 gateway:
   enabled: false
