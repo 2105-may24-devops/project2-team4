@@ -5,7 +5,7 @@ def getMapValue(jarMap, key) {
 
 node() {
     // add to env files
-    def requirements = ["mvn", "docker"] // "kubectl", "minikube"] // add newman
+    def requirements = ["mvn", "docker", "kubectl", "helm"] // add newman
     def sonarProjectKeys = ["flashcard-service": "2105-may24-devops-p2t4-flashcard",
                             "gateway-service": "2105-may24-devops_p2t4-gateway",
                             "quiz-service": "2105-may24-devops-p2t4-quiz"]
@@ -88,7 +88,8 @@ node() {
                     withCredentials([usernamePassword(credentialsId: 'azure_container_registry_login', passwordVariable: 'password', usernameVariable: 'username')]) {
                         sh "docker login -u ${username} -p ${password} ${env.container_registry}"
                     }
-                    def containerName = "${env.container_registry}/team4containers:${serviceName}-${checkout_details['GIT_COMMIT']}-${BRANCH_NAME}"
+                    // if master
+                    def containerName = "${env.container_registry}/${serviceName}:${checkout_details['GIT_COMMIT']}-${BRANCH_NAME}"
                     if (serviceBoolean) {
                         // serviceBoolean being true means given service was just updated and compiled, and jar file
                         // jar file exists in the target directory of the given service
@@ -112,6 +113,13 @@ node() {
         discord.sendDiscordMessage(desc)
     }
 
-    // test -- deploy on minikube cluster and test using postman
-    // stage("Test")
+    stage("Deploy to AKS Test Environment") {
+        sh "ls"
+        sh "helm upgrade test helm/testchart -i"
+        deployStatus = sh "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
+        if (deployStatus == 1) {
+            currentBuild.result = 'FAILURE'
+            error("Jenkins failed to deploy project to development AKS cluster")
+        }
+    }
 }
