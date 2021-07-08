@@ -18,6 +18,14 @@ spec:
       port:
         name: {{ .portName }}
   {{- end }}
+  {{- else }}
+  {{- with .Values.quiz.service }}
+  defaultBackend:
+    service:
+      name: {{ .name }}
+      port:
+        name: {{ .portName }}
+  {{- end }}
   {{- end }}
   rules:
     # host: <Host> #Placeholder. Dunno what to put. may be optional.
