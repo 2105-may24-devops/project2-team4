@@ -36,7 +36,7 @@ jobs:
           # discord webhook token
           webhook_token: 'OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
           # the message contents (up to 2000 characters)
-          message: D.MESSAGE
+          message: $D_MESSAGE
           # color code of the embed
           color: "#F3F910"
           # override the default username of the webhook
