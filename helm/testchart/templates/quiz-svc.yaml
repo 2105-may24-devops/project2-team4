@@ -6,7 +6,6 @@ metadata:
 spec:
   type: {{ .Values.quiz.service.type }}
   selector:
-    {{- include "testchart.selectorLabels" . | nindent 4 }}
     stack: backend
     app: quiz
   ports:

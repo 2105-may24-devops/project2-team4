@@ -6,7 +6,6 @@ metadata:
 spec:
   type: {{ .Values.flashcard.service.type }}
   selector:
-    {{- include "testchart.selectorLabels" . | nindent 4 }}
     stack: backend
     app: flashcard
   ports:

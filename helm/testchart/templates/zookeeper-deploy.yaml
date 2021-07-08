@@ -9,11 +9,9 @@ spec:
     matchLabels:
       stack: dependency
       app: zoo
-      {{- include "testchart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "testchart.selectorLabels" . | nindent 8 }}
         stack: dependency
         app: zoo
     spec:

@@ -6,7 +6,6 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- include "testchart.selectorLabels" . | nindent 6 }}
       stack: dependency
       app: consul
   template:
@@ -14,7 +13,6 @@ spec:
       labels:
         stack: dependency
         app: consul
-        {{- include "testchart.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.consul }}
       containers:

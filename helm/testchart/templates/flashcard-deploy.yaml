@@ -7,7 +7,6 @@ spec:
   serviceName: {{ .Values.flashcard.service.name }}
   selector:
     matchLabels:
-      {{- include "testchart.selectorLabels" . | nindent 6 }}
       stack: backend
       app: flashcard
   replicas: {{ .Values.flashcard.deploy.replicas }}
@@ -36,7 +35,6 @@ spec:
       labels:
         stack: backend
         app: flashcard
-        {{- include "testchart.selectorLabels" . | nindent 8 }}
     spec:
       containers:
       - name: flashcard

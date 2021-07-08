@@ -6,7 +6,6 @@ metadata:
 spec:
   {{- with .Values.zookeeper }}
   selector:
-    {{- include "testchart.selectorLabels" . | nindent 4 }}
     stack: dependency
     app: zoo
   type: {{ .service.type  }}

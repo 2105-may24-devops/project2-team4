@@ -7,13 +7,11 @@ spec:
   {{- with .Values.kafka }}
   selector:
     matchLabels:
-      {{- include "testchart.selectorLabels" . | nindent 6 }}
       stack: dependency
       app: kafka
   template:
     metadata:
       labels:
-        {{- include "testchart.selectorLabels" . | nindent 8 }}
         stack: dependency
         app: kafka
     spec:

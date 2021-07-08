@@ -6,7 +6,6 @@ metadata:
 spec:
   {{- with .Values.kafka }}
   selector:
-    {{- include "testchart.selectorLabels" . | nindent 4 }}
     stack: dependency
     app: kafka
   type: {{ .service.type }}

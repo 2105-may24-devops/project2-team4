@@ -7,7 +7,6 @@ spec:
   replicas: {{ .Values.gateway.deploy.replicas }}
   selector:
     matchLabels:
-      {{- include "testchart.selectorLabels" . | nindent 6 }}
       stack: backend
       app: gateway
   template:
@@ -15,7 +14,6 @@ spec:
       labels:
         stack: backend
         app: gateway
-        {{- include "testchart.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.gateway }}
       containers:
