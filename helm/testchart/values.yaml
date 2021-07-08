@@ -34,8 +34,11 @@ quiz:
     type: ClusterIP
     portName: quiz-port
 
-gateway:
+ingress:
   enabled: true
+
+gateway:
+  enabled: false
   port: 8080
   deploy:
     replicas: 1
