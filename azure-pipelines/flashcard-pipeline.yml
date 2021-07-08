@@ -54,7 +54,7 @@ stages:
     containerName: team4revops
     imageName: $(service)
     tag: latest
-    helmCommand: Upgrade
+    helmCommand: Install
     disableSvc1: quiz
     disableSvc2: gateway
     activeSvc: flashcard
