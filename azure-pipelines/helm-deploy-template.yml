@@ -36,12 +36,12 @@ stages:
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceConnection: 'team4cluster'
-        command: '${{ parameters.helmCommand }} '
+        command: '${{ parameters.helmCommand }}'
         chartType: 'FilePath'
         chartPath: './helm/testchart-0.1.0.tgz'
         overrideValues: |
-          ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName }}/${{ parameters.imageName }}
-          ${{ parameters.activeSvc }}=${{ parameters.tag }}
+          ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ paramaters.imageName }}
+          ${{ parameters.activeSvc }}.deploy.image.tag=${{ tag }}
           ${{ parameters.disableSvc1 }}.enabled=false
           ${{ parameters.disableSvc2 }}.enabled=false
           ${{ parameters.activeSvc }}.enabled=true
