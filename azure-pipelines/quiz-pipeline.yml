@@ -53,3 +53,4 @@ stages:
     helmCommand: Upgrade
     disableSvc1: flashcard
     activeSvc: quiz
+    deployAll: false
