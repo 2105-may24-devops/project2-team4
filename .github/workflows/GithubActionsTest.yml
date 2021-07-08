@@ -19,7 +19,8 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    env:
+      D_MESSAGE: "**Project 2**: $GITHUB_WORKFLOW \nBuild Number: $GITHUB_RUN_NUMBER \nBuild Branch: $GITHUB_REPOSITORY \nBuild Reason: $GITHUB_EVENT_NAME"
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -35,7 +36,7 @@ jobs:
           # discord webhook token
           webhook_token: 'OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
           # the message contents (up to 2000 characters)
-          message: "**Project 2**: $GITHUB_WORKFLOW \nBuild Number: $GITHUB_RUN_NUMBER \nBuild Branch: $GITHUB_REPOSITORY \nBuild Reason: $GITHUB_EVENT_NAME"
+          message: D.MESSAGE
           # color code of the embed
           color: "#F3F910"
           # override the default username of the webhook
