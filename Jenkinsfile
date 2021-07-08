@@ -89,7 +89,7 @@ node() {
                         sh "docker login -u ${username} -p ${password} ${env.container_registry}"
                     }
                     // if master
-                    def containerName = "${env.container_registry}/${serviceName}:${checkout_details['GIT_COMMIT']}-${BRANCH_NAME}"
+                    def containerName = "${env.container_registry}/${serviceName}:${BRANCH_NAME}"
                     if (serviceBoolean) {
                         // serviceBoolean being true means given service was just updated and compiled, and jar file
                         // jar file exists in the target directory of the given service
@@ -109,8 +109,7 @@ node() {
         parallel(parallelDocker)
 
         def desc = discord.createDescription(dockerChangeSet, serviceChangeSet)
-        println desc
-        discord.sendDiscordMessage(desc)
+        discord.sendDiscordMessage(desc, "Deploying to AKS Development to Run Postman Tests")
     }
 
     stage("Deploy to AKS Test Environment") {
@@ -120,6 +119,8 @@ node() {
         if (deployStatus == 1) {
             currentBuild.result = 'FAILURE'
             error("Jenkins failed to deploy project to development AKS cluster")
+
         }
+
     }
 }

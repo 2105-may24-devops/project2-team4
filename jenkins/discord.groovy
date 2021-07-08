@@ -18,11 +18,11 @@ def createDescription(dockerChanges, serviceChanges) {
 }
 
 
-def sendDiscordMessage(msg) {
-    discordSend description: msg, 
-        footer: 'something here.', 
+def sendDiscordMessage(description, footer) {
+    discordSend description: description, 
+        footer: footer, 
         image: '', 
-        link: "http://52.142.60.104:8080/jenkins/job/project2-team4/job/$BRANCH_NAME/", 
+        link: "http://52.142.60.104:8080/jenkins/job/project2-team4/job/$BRANCH_NAME/$BUILD_ID", 
         result: "$currentBuild.currentResult", 
         thumbnail: 'https://www.jenkins.io/images/logos/pixelart/jenkins-pixelart-32.png', 
         title: 'Team4-P2',
