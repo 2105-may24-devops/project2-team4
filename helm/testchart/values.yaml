@@ -112,7 +112,7 @@ kafka:
       name: kafka-svc-port
   
 consul:
-  enabled: false
+  enabled: true
   port: 8500
   deploy:
     name: consul-deploy
