@@ -38,6 +38,7 @@ stages:
         kubernetesServiceConnection: 'team4cluster'
         command: '${{ parameters.helmCommand }}'
         arguments: '--force --install'
+        releaseName: 'dev'
         chartType: 'FilePath'
         chartPath: './helm/testchart-0.1.0.tgz'
         overrideValues: |
