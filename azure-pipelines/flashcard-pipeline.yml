@@ -77,13 +77,13 @@ stages:
         kubernetesServiceConnection: 'team4cluster'
         command: 'install'
         chartType: 'FilePath'
-        chartPath: './helm/'
+        chartPath: './helm/testchart-0.1.0.tgz'
         releaseName: 'testdeploy'
         overrideValues: |
-            flashcard.deploy.image.name=team4containers.azurecr.io/flashcard-service
-            flashcard.deploy.image.tag=latest
-            quiz.enabled=false
-            gateway.enabled=false
+          flashcard.deploy.image.name=team4containers.azurecr.io/flashcard-service
+          flashcard.deploy.image.tag=latest
+          quiz.enabled=false
+          gateway.enabled=false
         valueFile: './helm/testchart/values.yaml'
 
 
