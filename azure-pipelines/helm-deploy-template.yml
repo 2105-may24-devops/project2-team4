@@ -47,5 +47,6 @@ stages:
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
           ${{ parameters.disableSvc1 }}.enabled=false
           ${{ parameters.activeSvc }}.enabled=true
+          kafka.enabled=true
           deployAll=${{ parameters.deployAll }}
         valueFile: './helm/testchart/values.yaml'
