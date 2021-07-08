@@ -75,7 +75,7 @@ stages:
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceConnection: 'team4cluster'
-        command: 'upgrade'
+        command: 'install'
         chartType: 'FilePath'
         chartPath: './helm/testchart-0.1.0.tgz'
         overrideValues: |
