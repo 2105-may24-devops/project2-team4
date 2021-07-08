@@ -52,5 +52,4 @@ stages:
     tag: latest
     helmCommand: Upgrade
     disableSvc1: flashcard
-    disableSvc2: gateway
     activeSvc: quiz
