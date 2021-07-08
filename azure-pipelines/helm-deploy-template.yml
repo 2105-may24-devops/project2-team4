@@ -39,6 +39,7 @@ stages:
         command: '${{ parameters.helmCommand }}'
         arguments: '--install'
         releaseName: 'dev'
+        namespace: 'test'
         chartType: 'FilePath'
         chartPath: './helm/testchart-0.1.0.tgz'
         overrideValues: |
