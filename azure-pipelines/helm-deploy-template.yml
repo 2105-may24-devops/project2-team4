@@ -13,7 +13,7 @@ parameters:
   - name: 'activeSvc'
     type: string
   - name: 'deployAll'
-    type: boolean
+    type: string
   
 
 
