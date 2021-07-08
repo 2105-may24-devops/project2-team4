@@ -34,7 +34,7 @@ jobs:
           # discord webhook token
           webhook_token: 'OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
           # the message contents (up to 2000 characters)
-          message: "Project 2: ${{ GITHUB.WORKFLOW }} \nBuild Number: ${{ GITHUB.RUN_NUMBER }} \nBuild Branch: ${{ GITHUB.REPOSITORY }} \nBuild Reason: ${{ GITHUB.EVENT_NAME }}"
+          message: "Project 2: ${{ GITHUB.WORKFLOW }} \nBuild Number: ${{ GITHUB.RUN_NUMBER }} \nBuild Branch: ${{ GITHUB.REPOSITORY }} \nBuild Reason: ${{ GITHUB.EVENT_NAME \nGithub Repo: https://github.com/2105-may24-devops/project2-team4}}"
           # color code of the embed
           color: "#F3F910"
           # override the default username of the webhook
