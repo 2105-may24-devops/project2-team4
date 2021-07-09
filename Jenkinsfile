@@ -153,6 +153,7 @@ node() {
             productionStatus = false
         }
         def discord = load("jenkins/discord.groovy")
+        println "${testStageResult} tests"
         def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, productionStatus)
         discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
     }
