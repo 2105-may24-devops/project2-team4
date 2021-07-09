@@ -41,7 +41,7 @@ stages:
         releaseName: 'dev'
         namespace: 'test'
         chartType: 'FilePath'
-        chartPath: './helm/testchart-0.1.0.tgz'
+        chartPath: './helm/team4quizapp-0.1.0.tgz'
         overrideValues: |
           ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
