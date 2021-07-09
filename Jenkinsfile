@@ -146,6 +146,7 @@ node("p1-agent") {
     stage("Deployment") {
         def discord = load("jenkins/discord.groovy")
         if (env.deploy_master == "yes" && BRANCH_NAME == 'master' && testStageResult) {
+            try {
             sh "kubectl config use-context ${env.production_cluster}"
             sh """helm upgrade test helm/testchart -i \
                     --set flashcard.image.name=${env.container_registry}/flashcard-service \
@@ -163,6 +164,10 @@ node("p1-agent") {
             println "${testStageResult} tests"
             def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, "${productionStatus ? 'Succeeded' : 'Failed'}")
             discord.sendDiscordMessage(desc, "Jenkins!")
+            } catch(Exception e) {
+                def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, 'Failed')
+                discord.sendDiscordMessage(desc, "Jenkins!")
+            }
         } else if (env.deploy_master == "yes" && BRANCH_NAME == 'master' && testStageResult) {
             def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, 'Build Failed Postman Tests')
             discord.sendDiscordMessage(desc, "Jenkins!")          
