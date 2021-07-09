@@ -48,7 +48,7 @@ stages:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceConnection: 'team4dev2'
         command: 'upgrade'
-        arguments: '--install --atomic --reuse-values --create-namespace dev'
+        arguments: '--install --atomic --reuse-values --create-namespace'
         releaseName: 'deploytest'
         namespace: 'dev'
         chartType: 'FilePath'
