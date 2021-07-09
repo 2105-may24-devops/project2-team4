@@ -5,7 +5,7 @@ def getMapValue(jarMap, key) {
 
 node() {
     // add to env files
-    def requirements = ["mvn", "docker", "kubectl", "helm"] // add newman
+    def requirements = ["mvn", "docker", "kubectl", "helm", "newman"]
     def sonarProjectKeys = ["flashcard-service": "2105-may24-devops-p2t4-flashcard",
                             "gateway-service": "2105-may24-devops_p2t4-gateway",
                             "quiz-service": "2105-may24-devops-p2t4-quiz"]
@@ -119,8 +119,15 @@ node() {
         if (deployStatus == 1) {
             currentBuild.result = 'FAILURE'
             error("Jenkins failed to deploy project to development AKS cluster")
-
         }
+        
+        
+        // dont commit
+        def url = sh script: "echo $(kubectl get svc/gateway-svc -o jsonpath='{.status.loadBalancer.ingress[0].ip}')", returnStdout: true
+        // sh script: "helm install test helm/testchart --set ingress-nginx.extraArgs.watch-namespace=null"
+        
+        // run newman tests
+        sh script: "newman run postman/kube_tests.json --timout-request 1500 --global-var ${url}:8080"
 
     }
 }

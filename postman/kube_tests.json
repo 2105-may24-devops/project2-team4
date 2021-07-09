@@ -1,0 +1,160 @@
+{
+	"info": {
+		"_postman_id": "5197c587-f02b-44c5-8e88-0dedb137a419",
+		"name": "project2-tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "flashcard get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Testing /flashcard get\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(800)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/flashcard",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"flashcard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "quiz/cards get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Testing /quiz/cards get\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/quiz/cards",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"quiz",
+						"cards"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "flashcard/port get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Testing flashcard/port get\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"question\": \"What is the best CI/CD pipeline tool?\",\r\n    \"answer\": \"Jenkins!\"\r\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/flashcard/port",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"flashcard",
+						"port"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "quiz/port get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Testing /quiz/cards get\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/quiz/port",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"quiz",
+						"port"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
