@@ -92,7 +92,7 @@ node("p1-agent") {
                         sh "docker login -u ${username} -p ${password} ${env.container_registry}"
                     }
                     // if master
-                    def containerName = "${env.container_registry}/${serviceName}:${BRANCH_NAME ? 'latest' : BRANCH_NAME}"
+                    def containerName = "${env.container_registry}/${serviceName}:${BRANCH_NAME == 'master' ? 'latest' : BRANCH_NAME}"
                     if (serviceBoolean) {
                         // serviceBoolean being true means given service was just updated and compiled, and jar file
                         // jar file exists in the target directory of the given service
