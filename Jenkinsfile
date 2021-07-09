@@ -148,12 +148,12 @@ node() {
         sh "kubectl config use-context ${env.production_cluster}"
         sh "helm upgrade test helm/testchart -i"
         deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
-        def productionStatus
+        def productionStatus = true
         if (deployExitStatus != 0) {
             productionStatus = false
         }
         def discord = load("jenkins/discord.groovy")
-        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, deployStageResult)
+        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, productionStatus)
         discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
     }
 }
