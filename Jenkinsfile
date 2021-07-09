@@ -126,6 +126,7 @@ node("p1-agent") {
               --set gateway.image.name=${env.container_registry}/gateway-service \
               --set gateway.image.tag=${BRANCH_NAME} \
               --atomic
+              -n team4
               """
         deployStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
         if (deployStatus != 0) {
