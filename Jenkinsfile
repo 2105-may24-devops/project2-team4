@@ -120,11 +120,11 @@ node("p1-agent") {
         sh "kubectl config use-context ${env.development_cluster}"
         sh """helm upgrade deploytest helm/testchart -i \
               --set flashcard.image.name=${env.container_registry}/flashcard-service \
-              --set flashcard.image.tag=${BRANCH_NAME} \
+              --set flashcard.image.tag=${BRANCH_NAME == 'master' ? 'latest' : BRANCH_NAME} \
               --set quiz.image.name=${env.container_registry}/quiz-service \
-              --set quiz.image.tag=${BRANCH_NAME} \
+              --set quiz.image.tag=${BRANCH_NAME == 'master' ? 'latest' : BRANCH_NAME} \
               --set gateway.image.name=${env.container_registry}/gateway-service \
-              --set gateway.image.tag=${BRANCH_NAME} \
+              --set gateway.image.tag=${BRANCH_NAME == 'master' ? 'latest' : BRANCH_NAME} \
               --atomic
               """
         deployStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
@@ -146,25 +146,25 @@ node("p1-agent") {
         def discord = load("jenkins/discord.groovy")
         if (env.deploy_master == "yes" && BRANCH_NAME == 'master' && testStageResult) {
             try {
-            sh "kubectl config use-context ${env.production_cluster}"
-            sh """helm upgrade deploytest helm/testchart -i \
-                    --set flashcard.image.name=${env.container_registry}/flashcard-service \
-                    --set flashcard.image.tag=latest \
-                    --set quiz.image.name=${env.container_registry}/quiz-service \
-                    --set quiz.image.tag=latest \
-                    --set gateway.image.name=${env.container_registry}/gateway-service \
-                    --set gateway.image.tag=latest \
-                    --set ingress.host=true \
-                    --set ingress-nginx.enabled=false
-               """
-            deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
-            def productionStatus = true
-            if (deployExitStatus != 0) {
-                productionStatus = false
-            }
-            println "${testStageResult} tests"
-            def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, "${productionStatus ? 'Succeeded' : 'Failed'}")
-            discord.sendDiscordMessage(desc, "Jenkins!")
+                sh "kubectl config use-context ${env.production_cluster}"
+                sh """helm upgrade deploytest helm/testchart -i \
+                        --set flashcard.image.name=${env.container_registry}/flashcard-service \
+                        --set flashcard.image.tag=latest \
+                        --set quiz.image.name=${env.container_registry}/quiz-service \
+                        --set quiz.image.tag=latest \
+                        --set gateway.image.name=${env.container_registry}/gateway-service \
+                        --set gateway.image.tag=latest \
+                        --set ingress.host=true \
+                        --set ingress-nginx.enabled=false
+                """
+                deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
+                def productionStatus = true
+                if (deployExitStatus != 0) {
+                    productionStatus = false
+                }
+                println "${testStageResult} tests"
+                def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, "${productionStatus ? 'Succeeded' : 'Failed'}")
+                discord.sendDiscordMessage(desc, "Jenkins!")
             } catch(Exception e) {
                 def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, 'Failed')
                 discord.sendDiscordMessage(desc, "Jenkins!")
