@@ -24,7 +24,7 @@ stages:
         chartPath: './helm/testchart/'
         destination: './helm/'
     - script: find | grep helm
-    - script: ./helm/temp/commands.sh
+    # - script: ./helm/temp/commands.sh
     - task: HelmDeploy@0
       inputs:
         connectionType: 'Kubernetes Service Connection'
@@ -38,5 +38,6 @@ stages:
         overrideValues: |
           ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
+          ingress-nginx=true
        
         valueFile: './helm/testchart/values.yaml'
