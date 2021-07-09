@@ -11,9 +11,8 @@ parameters:
 
 stages:
 - stage:
-  displayName: Deployyyy
+  displayName: Deployyyy Prod
   dependsOn: 
-    - LatestImage
     - CommitImage
   jobs:
   - job: ApplyAndDeploy
@@ -57,5 +56,54 @@ stages:
           ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
       #    ingress-nginx.enabled=false
+       
+        valueFile: './helm/testchart/values.yaml'
+
+- stage:
+  displayName: Deployyyy Dev
+  dependsOn: 
+    - LatestImage
+  jobs:
+  - job: ApplyAndDeploy
+    steps:
+    - task: HelmDeploy@0
+      inputs:
+        command: 'package'
+        chartPath: './helm/testchart/'
+        destination: './helm/'
+    - script: find | grep helm
+   
+    # - script: ./helm/temp/commands.sh
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: 'team4cluster'
+        command: 'upgrade'
+        arguments: '--install --atomic --reuse-values --dry-run'
+        releaseName: 'deploytest'
+        namespace: 'dev'
+        chartType: 'FilePath'
+        chartPath: './helm/team4quizapp-0.1.0.tgz'
+        overrideValues: |
+          ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
+          ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
+          ingress-nginx.enabled=true
+       
+        valueFile: './helm/testchart/values.yaml'
+
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: 'team4dev2'
+        command: 'upgrade'
+        arguments: '--install --atomic --reuse-values --create-namespace'
+        releaseName: 'deploytest'
+        namespace: 'team4'
+        chartType: 'FilePath'
+        chartPath: './helm/team4quizapp-0.1.0.tgz'
+        overrideValues: |
+          ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
+          ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
+          ingress-nginx.enabled=true
        
         valueFile: './helm/testchart/values.yaml'
