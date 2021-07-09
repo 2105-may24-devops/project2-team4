@@ -1,4 +1,5 @@
 ingress-nginx:
+  enabled: true
   controller: 
     replicaCount: 2 
     nodeSelector: 
@@ -18,7 +19,7 @@ ingress-nginx:
       serviceMonitor: 
         enabled: true 
     extraArgs:
-      - watch-namespace: team4
+      watch-namespace: team4
 
 cert-manager:
   nodeSelector: 

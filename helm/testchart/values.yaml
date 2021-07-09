@@ -129,6 +129,7 @@ consul:
 
 # Subchart stuff
 ingress-nginx:
+  enabled: false
   controller: 
     replicaCount: 2 
     nodeSelector: 
@@ -148,4 +149,4 @@ ingress-nginx:
       serviceMonitor: 
         enabled: true 
     extraArgs:
-      - watch-namespace: team4
+      watch-namespace: team4
