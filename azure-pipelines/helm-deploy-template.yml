@@ -38,6 +38,6 @@ stages:
         overrideValues: |
           ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
-          ingress-nginx=true
+          ingress-nginx.enabled=true
        
         valueFile: './helm/testchart/values.yaml'
