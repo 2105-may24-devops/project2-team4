@@ -223,7 +223,7 @@ alertmanager:
     ## Hosts must be provided if Ingress is enabled.
     ##
     hosts:
-    - p2team4revopsmd.eastus.cloudapp.azure.com
+    - p2team4revopsaj.centralus.cloudapp.azure.com
 
     ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
     ##
@@ -241,7 +241,7 @@ alertmanager:
     tls:
     - secretName: general-tls
       hosts:
-      - p2team4revopsmd.eastus.cloudapp.azure.com
+      - p2team4revopsaj.centralus.cloudapp.azure.com
 
   ## Configuration for Alertmanager secret
   ##
@@ -650,7 +650,7 @@ grafana:
     # hosts:
     #   - grafana.domain.com
     hosts:
-    - p2team4revopsmd.eastus.cloudapp.azure.com
+    - p2team4revopsaj.centralus.cloudapp.azure.com
 
     ## Path for grafana ingress
     path: /grafana
@@ -662,7 +662,7 @@ grafana:
     tls:
     - secretName: general-tls
       hosts:
-      - p2team4revopsmd.eastus.cloudapp.azure.com
+      - p2team4revopsaj.centralus.cloudapp.azure.com
 
   sidecar:
     dashboards:
@@ -754,7 +754,7 @@ grafana:
   grafana.ini:
     server:
       # domain: mysb.grafanasite.com
-      root_url: https://p2team4revopsmd.eastus.cloudapp.azure.com/grafana/
+      root_url: https://p2team4revopsaj.centralus.cloudapp.azure.com/grafana/
       serve_from_sub_path: true
 
 ## Component scraping the kube api server
@@ -1793,7 +1793,7 @@ prometheus:
     # hosts:
     #   - prometheus.domain.com
     hosts:
-    - p2team4revopsmd.eastus.cloudapp.azure.com
+    - p2team4revopsaj.centralus.cloudapp.azure.com
 
     ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
     ##
@@ -1811,7 +1811,7 @@ prometheus:
     tls:
     - secretName: general-tls
       hosts:
-      - p2team4revopsmd.eastus.cloudapp.azure.com
+      - p2team4revopsaj.centralus.cloudapp.azure.com
 
   ## Configuration for creating an Ingress that will map to each Prometheus replica service
   ## prometheus.servicePerReplica must be enabled

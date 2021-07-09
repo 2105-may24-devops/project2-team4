@@ -42,9 +42,9 @@ quiz:
 ingress:
   enabled: true
   name: myingress
-  host:
-    hostlabel: p2team4revopsmd
-    region: eastus
+  host: false
+    # hostlabel: p2team4revopsmd
+    # region: eastus
 
 gateway:
   enabled: false
