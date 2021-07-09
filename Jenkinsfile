@@ -77,7 +77,7 @@ node() {
 
         // docker section
         parallelDocker = [:]
-        def dockerChangeSet = changes.findChangedDockerfiles()
+        dockerChangeSet = changes.findChangedDockerfiles()
 
         for (key in dockerChangeSet.keySet()) {
             def serviceName = key
