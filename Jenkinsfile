@@ -125,7 +125,7 @@ node() {
         // dont commit
         def url = sh script: "echo \$(kubectl get svc/gateway-svc -o jsonpath='{.status.loadBalancer.ingress[0].ip}')", returnStdout: true
         // sh script: "helm install test helm/testchart --set ingress-nginx.extraArgs.watch-namespace=null"
-        
+        sh "sleep 60s"
         // run newman tests
         sh script: "newman run postman/kube_tests.json --timeout-request 1500 --global-var ${url}:8080"
 
