@@ -1,8 +1,5 @@
 jobs:
   - job: DiscordMessage
-    dependsOn:
-      - BuildPushDocker
-      - BuildPushAzure
 
     steps: 
     - task: ado-discord-webhook@1
@@ -22,5 +19,5 @@ jobs:
           ```
           Image: "$(service)-$(Build.SourceVersion)"
           Pushed to Azure Container Registry
-          Pushed to Docker Hub Repostiroy
+          Pushed to Docker Hub Repository
           ```
