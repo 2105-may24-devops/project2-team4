@@ -18,7 +18,7 @@ node() {
 
     def serviceChangeSet = null
     def dockerChangeSet = null
-    def testStageResult = null
+    def testStageResult = true
     stage("Build, Test and Analyze") {
 
         // create env variable which ends succesfully without running anything if branch is 'master'
@@ -137,9 +137,7 @@ node() {
                                returnStatus: true
         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'newman/', reportFiles: '*.html', reportName: "Postman Tests for $BRANCH_NAME", reportTitles: "$BRANCH_NAME Postman Tests"])
         
-        if (newmanResults == 0) {
-            testStageResult = true
-        } else {
+        if (newmanResults != 0) {
             testStageResult = false
         }
     }
