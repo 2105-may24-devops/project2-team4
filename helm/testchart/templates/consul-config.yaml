@@ -1,0 +1,9 @@
+{{- if or .Values.deployAll .Values.consul.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.consul.name }}
+data:
+  spring.cloud.consul.host: {{ .Values.consul.service.name }}
+  spring.cloud.consul.port: {{ .Values.consul.port | quote }}
+{{- end }}

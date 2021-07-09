@@ -1,0 +1,35 @@
+{{- if or .Values.deployAll .Values.quiz.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.quiz.deploy.name }}
+spec:
+  replicas: {{ .Values.quiz.deploy.replicas }}
+  selector:
+    matchLabels:
+      stack: backend
+      app: quiz
+  template:
+    metadata:
+      labels:
+        stack: backend
+        app: quiz
+    spec:
+    {{- with .Values.quiz}}
+      containers:
+      - name: quiz
+        image: {{ .deploy.image.name }}:{{ .deploy.image.tag }}
+        resources:
+          limits:
+            memory: {{ .deploy.resources.limits.memory | quote }}
+            cpu: {{ .deploy.resources.limits.cpu | quote }}
+        ports:
+        - containerPort: {{ .port }}
+        env: 
+        - name: spring.cloud.consul.discovery.hostname
+          value: {{ .service.name }}
+    {{- end }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.config.consul.name }}
+{{- end }}

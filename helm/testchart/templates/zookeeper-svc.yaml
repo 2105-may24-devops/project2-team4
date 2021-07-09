@@ -1,0 +1,16 @@
+{{- if or .Values.deployAll .Values.kafka.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.zookeeper.service.name }}
+spec:
+  {{- with .Values.zookeeper }}
+  selector:
+    stack: dependency
+    app: zoo
+  type: {{ .service.type  }}
+  ports:
+    - port: {{ .port }}
+      name: {{ .service.ports.name }}
+  {{- end }}
+{{- end }}

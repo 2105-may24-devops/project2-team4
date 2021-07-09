@@ -1,0 +1,14 @@
+{{- if or .Values.deployAll .Values.quiz.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.quiz.service.name }}
+spec:
+  type: {{ .Values.quiz.service.type }}
+  selector:
+    stack: backend
+    app: quiz
+  ports:
+  - port: {{ .Values.quiz.port }}
+    name: {{ .Values.quiz.service.portName }}
+{{- end }}

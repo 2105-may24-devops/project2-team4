@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: quiz-deploy
-  namespace: p2t4
 spec:
+  replicas: 1
   selector:
     matchLabels:
       stack: backend
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: quiz
-        image: <Image> # TODO: Placeholder
+        image: mdarmawan/quiz:mdtest # TODO: Placeholder
         resources:
           limits:
             memory: "1.5Gi"
@@ -24,14 +24,14 @@ spec:
         ports:
         - containerPort: 8090
         volumeMounts: [] # Placeholder
-        env: []
+        env: 
+        - name: spring.cloud.consul.discovery.hostname
+          value: quiz-svc
         envFrom:
         - configMapRef:
             name: consul-connection
-        - configMapRef:
-            name: db-info
-        # Other env values: 
-        #    database (volume mounts?)
+        # - configMapRef:
+        #     name: db-info
       volumes: [] # Placeholder
 
 ---
@@ -39,7 +39,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: quiz-svc
-  namespace: p2t4
+  # annotations:
+  #   'consul.hashicorp.com/service-sync': 'true'
 spec:
   type: ClusterIP
   selector:

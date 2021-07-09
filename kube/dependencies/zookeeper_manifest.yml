@@ -2,11 +2,11 @@ apiVersion: apps/v1
 kind: Deployment # maybe zookeeper should be a statefulSet
 metadata:
   name: zookeeper-deploy
-  namespace: p2t4 # in theory, this is inadvisable to put here, use kubectl
 spec:
   selector:
-    stack: dependency
-    app: zoo
+    matchLabels:
+      stack: dependency
+      app: zoo
   template:
     metadata:
       labels:
@@ -30,11 +30,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: zookeeper-svc
-  namespace: p2t4
 spec:
   selector:
     stack: dependency
     app: zoo
   type: ClusterIP
   ports:
-    - 2181
+    - port: 2181

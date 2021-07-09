@@ -1,16 +1,29 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: flashcard-deploy
-  namespace: p2t4
+  name: flashcard-sset
 spec:
-  replicas: 2
-  strategy:
-    type: RollingUpdate
+  serviceName: flashcard-svc
   selector:
     matchLabels:
       stack: backend
       app: flashcard
+  replicas: 2
+  # strategy:
+  #   type: RollingUpdate
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: fcdb-pvc
+      spec:
+        storageClassName: default
+        resources:
+          requests:
+            storage: "1Gi"
+        volumeMode: Filesystem
+        accessModes:
+          - ReadWriteOnce
   template:
     metadata:
       labels:
@@ -19,32 +32,34 @@ spec:
     spec:
       containers:
       - name: flashcard
-        image: <Image> # TODO: Placeholder
+        image: __container__/__image__:__tag__ #mdarmawan/flashcard:mdtest # TODO: Placeholder
         resources:
           limits:
             memory: "1Gi"
-            cpu: "1000m"
+            cpu: "300m"
         ports:
         - containerPort: 8089
-        volumeMounts: [] # Placeholder
+        volumeMounts: 
+        - name: fcdb-pvc
+          mountPath: /app/dbdata/
         env:
         - name: spring.kafka.consumer.bootstrap-servers
-          value: kafka-svc.p2t4:9092 # TODO: placeholder
+          value: kafka-svc:9092 
         - name: spring.kafka.producer.bootstrap-servers
-          value: kafka-svc.p2t4:9092 # TODO: placeholder
+          value: kafka-svc:9092 
         envFrom:
         - configMapRef:
             name: consul-connection
         - configMapRef:
             name: db-info
-      volumes: [] # Placeholder
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: flashcard-svc
-  namespace: p2t4
+  annotations:
+    'consul.hashicorp.com/service-sync': 'true'
 spec:
   type: ClusterIP
   selector:

@@ -1,0 +1,28 @@
+{{- if or .Values.deployAll .Values.consul.enabled }}
+apiVersion: apps/v1
+kind: Deployment # maybe zookeeper should be a statefulSet
+metadata:
+  name: {{ .Values.consul.deploy.name }}
+spec:
+  selector:
+    matchLabels:
+      stack: dependency
+      app: consul
+  template:
+    metadata:
+      labels:
+        stack: dependency
+        app: consul
+    spec:
+    {{- with .Values.consul }}
+      containers:
+      - name: consul
+        image: consul:{{ .deploy.imageTag }}
+        ports: 
+        - containerPort: {{ .port }}
+        resources:
+          limits:
+            memory: {{ .deploy.resources.limits.memory | quote }}
+            cpu: {{ .deploy.resources.limits.cpu | quote }}
+    {{- end }}
+{{- end }}

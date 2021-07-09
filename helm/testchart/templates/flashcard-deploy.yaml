@@ -1,0 +1,72 @@
+{{- if or .Values.deployAll .Values.flashcard.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.flashcard.deploy.name }}
+spec:
+  serviceName: {{ .Values.flashcard.service.name }}
+  selector:
+    matchLabels:
+      stack: backend
+      app: flashcard
+  replicas: {{ .Values.flashcard.deploy.replicas }}
+  # strategy:
+  #   type: RollingUpdate
+  {{- if .Values.config.dbcm.inFile }}
+  volumeClaimTemplates:
+  {{- with .Values.volumes.fcdbVol }}
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: {{ .name }}
+      spec:
+        storageClassName: {{ .storageClassName }}
+        resources:
+          requests:
+            storage: {{ .resources.requests.storage | quote}}
+        volumeMode: Filesystem
+        accessModes:
+          - {{ .access }}
+  {{- end}}
+  {{- end }}
+  template:
+  {{- with .Values.flashcard }}
+    metadata:
+      labels:
+        stack: backend
+        app: flashcard
+    spec:
+      containers:
+      - name: flashcard
+        image: {{ .deploy.image.name }}:{{ .deploy.image.tag }}
+        # {{- with .deploy.resources}}
+        # resources:
+        #   limits:
+        #     memory: {{ .limits.memory | quote }}
+        #     cpu: {{ .limits.cpu | quote }}
+        # {{- end }}
+        ports:
+        - containerPort: {{ .port }}
+  {{- end }}
+  {{- if .Values.config.dbcm.inFile }}
+        volumeMounts: 
+        - name: {{ .Values.volumes.fcdbVol.name }}
+          mountPath: /app/dbdata/
+  {{- end }}
+        env:
+        - name: spring.kafka.consumer.bootstrap-servers
+          value: {{ .Values.kafka.service.name }}:{{ .Values.kafka.port }}
+        - name: spring.kafka.producer.bootstrap-servers
+          value: {{ .Values.kafka.service.name }}:{{ .Values.kafka.port }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.config.consul.name }}
+        - configMapRef:
+            name: {{ .Values.config.dbcm.name }}
+      {{- if and .Values.config.dbcm.inFile false }}
+      volumes: 
+      - name: {{ .Values.volumes.fcdbVol.name }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.volumes.fcdbVol.name }}
+      {{- end }}
+{{- end }}

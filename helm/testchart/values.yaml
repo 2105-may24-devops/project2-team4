@@ -1,0 +1,155 @@
+# deployAll - set to true for first-time deployments on a clean cluster, or false for deploying a single thing.
+deployAll: true
+# nameOverride: null
+# namePrefix: null
+
+flashcard:
+  enabled: true
+  port: 8089
+  deploy:
+    replicas: 2
+    name: flashcard-sset
+    image:
+      name: mdarmawan/flashcard
+      tag: mdtest
+    resources:
+      limits:
+        memory: 1Gi
+        cpu: 100m
+  service:
+    name: flashcard-svc
+    type: ClusterIP
+    portName: fc-port
+
+quiz:
+  enabled: true
+  port: 8090
+  deploy:
+    replicas: 1
+    name: quiz-deploy
+    image:
+      name: mdarmawan/quiz
+      tag: mdtest
+    resources:
+      limits:
+        memory: 1.5Gi
+        cpu: 100m
+  service:
+    name: quiz-svc
+    type: ClusterIP
+    portName: quiz-port
+
+ingress:
+  enabled: true
+  name: myingress
+  host: false
+    # hostlabel: p2team4revopsmd
+    # region: eastus
+
+gateway:
+  enabled: true
+  port: 8080
+  deploy:
+    replicas: 1
+    name: gateway-deploy
+    image:
+      name: mdarmawan/gateway
+      tag: mdtest
+    resources:
+      limits:
+        memory: 1Gi
+        cpu: 100m
+  service:
+    name: gateway-svc
+    type: LoadBalancer
+    portName: entrypoint
+
+config:
+  consul:
+    name: consul-connection
+  dbcm:
+    name: db-info
+    inFile: true
+
+volumes:
+  fcdbVol:
+    name: fcdb-pvc
+    storageClassName: default
+    mountPath: /app/dbdata/
+    resources:
+      requests:
+        storage: 1Gi
+    access: ReadWriteOnce
+
+zookeeper:
+  # enabling is linked to kafka, since kafka is the only one dependent on this.
+  port: 2181
+  deploy:
+    name: zookeeper-deploy
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 100m
+    imageTag: latest
+  service:
+    name: zookeeper-svc
+    type: ClusterIP
+    ports:
+      name: zookeeper-port
+
+kafka:
+  # flashcard microservice will fail without kafka.
+  enabled: true
+  port: 9092
+  deploy:
+    name: kafka-deploy
+    imageTag: latest
+    resources:
+      limits: 
+        memory: 512Mi
+        cpu: 100m
+  service:
+    name: kafka-svc
+    type: ClusterIP
+    ports:
+      name: kafka-svc-port
+  
+consul:
+  enabled: true
+  port: 8500
+  deploy:
+    name: consul-deploy
+    imageTag: latest
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 100m
+  service:
+    name: consul-svc
+    type: ClusterIP
+    ports:
+      name: consul-svc-port
+
+# Subchart stuff
+ingress-nginx:
+  enabled: false
+  controller: 
+    replicaCount: 2 
+    # nodeSelector: 
+    #   kubernetes.io/os: linux 
+    # defaultBackend: 
+    #   nodeSelector: 
+    #     kubernetes.io/os: linux 
+    # admissionWebhooks: 
+    #   patch: 
+    #     nodeSelector: 
+    #       kubernetes.io/os: linux 
+    # service: 
+    #   annotations: 
+    #     service.beta.kubernetes.io/azure-dns-label-name: p2team4revopsmd
+    # metrics:
+    #   enabled: true 
+    #   serviceMonitor: 
+    #     enabled: true 
+    # extraArgs:
+    #   watch-namespace: team4

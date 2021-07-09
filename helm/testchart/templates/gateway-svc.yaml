@@ -1,0 +1,14 @@
+{{- if or .Values.deployAll .Values.gateway.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.gateway.service.name }}
+spec:
+  type: {{ .Values.gateway.service.type }}
+  selector:
+    stack: backend
+    app: gateway
+  ports:
+  - port: {{ .Values.gateway.port }}
+    name: {{ .Values.gateway.service.portName }}
+{{- end }}

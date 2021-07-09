@@ -1,0 +1,14 @@
+{{- if or .Values.deployAll .Values.consul.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.consul.service.name }}
+spec:
+  selector:
+    stack: dependency
+    app: consul
+  type: {{.Values.consul.service.type }}
+  ports:
+  - port: {{ .Values.consul.port }}
+    name: {{ .Values.consul.service.ports.name }}
+{{- end }}

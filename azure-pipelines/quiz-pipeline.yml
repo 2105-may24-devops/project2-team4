@@ -8,6 +8,7 @@ trigger:
     - quiz-service
     exclude:
     - flashcard-service
+    - gateway-service
     
 
 variables:
@@ -26,8 +27,27 @@ stages:
 
 - template: ./docker-stage-template.yml
   parameters:
+    stage: CommitImage
     displayName: '${{ variables.service }} Image Build and Push to ACR/Dockerhub'
     targetPath: './dockerize'
     Dockerfile: 'dockerize/quiz.Dockerfile'
     artifact: $(service)
-    tags: "$(service)-$(Build.SourceVersion)"
+    tags: "$(Build.SourceVersion)"
+    repository: "team4revops/$(service)"
+
+- template: ./docker-stage-template.yml
+  parameters:
+    stage: LatestImage
+    displayName: '${{ variables.service }} Image Build and Push to ACR/Dockerhub'
+    targetPath: './dockerize'
+    Dockerfile: 'dockerize/quiz.Dockerfile'
+    artifact: $(service)
+    tags: latest
+    repository: "team4revops/$(service)"
+
+- template: ./helm-deploy-template.yml
+  parameters:
+    containerName: team4revops
+    imageName: $(service)
+    tag: latest
+    activeSvc: quiz

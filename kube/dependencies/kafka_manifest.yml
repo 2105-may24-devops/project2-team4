@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment # maybe kafka should be stateful in case of interruption of messaging
 metadata:
   name: kafka-deploy
-  namespace: p2t4 # in theory, this is inadvisable to put here, use "kubectl -n p2t4 apply -f manifest.yml"
 spec:
   selector:
-    stack: dependency
-    app: kafka
+    matchLabels:
+      stack: dependency
+      app: kafka
   template:
     metadata:
       labels:
         stack: dependency
         app: kafka
     spec:
-      initContainers:
-      - name: blah #TODO:
+      # initContainers:
+      # - name: blah #TODO:
       containers:
       - name: kafka
         image: bitnami/kafka
@@ -34,12 +34,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kafka-svc
-  namespace: p2t4
 spec:
   selector:
     stack: dependency
     app: kafka
   type: ClusterIP
   ports:
-    - 9092
+  - port: 9092
+    name: kafka-svc-port
     

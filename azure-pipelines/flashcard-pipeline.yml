@@ -10,11 +10,9 @@ trigger:
     include:
     - flashcard-service
     exclude:
+    - gateway-service
     - quiz-service
     - README.md
-
-# resources:
-# - repo: "https://github.com/2105-may24-devops/project2-team4.git"
 
 variables:
 - name: service
@@ -32,100 +30,135 @@ stages:
 
 - template: ./docker-stage-template.yml
   parameters:
+    stage: CommitImage
     displayName: '${{ variables.service }} Image Build and Push to ACR/Dockerhub'
     targetPath: './dockerize'
     Dockerfile: 'dockerize/flashcard.Dockerfile'
     artifact: $(service)
-    tags: "$(service)-$(Build.SourceVersion)"
+    tags: "$(Build.SourceVersion)"
+    repository: 'team4revops/$(service)'
+- template: ./docker-stage-template.yml
+  parameters:
+    stage: LatestImage
+    displayName: '${{ variables.service }} Image Build and Push to ACR/Dockerhub'
+    targetPath: './dockerize'
+    Dockerfile: 'dockerize/flashcard.Dockerfile'
+    artifact: $(service)
+    tags: latest
+    repository: "team4revops/$(service)"
+
+# Deployment Helm
+
+- template: ./helm-deploy-template.yml
+  parameters:
+    containerName: team4revops
+    imageName: $(service)
+    tag: latest
+    activeSvc: flashcard
   
-    
-# Continuous Integration - SonarCloud Analysis and Dockerization
 
-# - stage: StaticAnalysis
-  # displayName: Analysis of Flashcard Microservice with SonarCloud
-
-  # jobs:
-  # - job: PrepareScan
-  #   steps:
-  #   - task: SonarCloudPrepare@1
-  #     inputs:
-  #       SonarCloud: 'Project2 Team4 Sonar'
-  #       organization: '2105-may24-devops'
-  #       scannerMode: 'Other'
-  #   - task: Maven@3
-  #     inputs:
-  #       mavenPomFile: 'flashcard-service/pom.xml'
-  #       options: '-f /flashcard-service/pom.xml'
-  #       publishJUnitResults: true
-  #       testResultsFiles: '**/surefire-reports/TEST-*.xml'
-  #       codeCoverageToolOption: 'JaCoCo'
-  #       codeCoverageRestoreOriginalPomXml: true
-  #       javaHomeOption: 'JDKVersion'
-  #       jdkVersionOption: '1.11'
-  #       mavenVersionOption: 'Default'
-  #       mavenAuthenticateFeed: false
-  #       effectivePomSkip: false
-  #       sonarQubeRunAnalysis: true
-  #       isJacocoCoverageReportXML: true
-  #       sqMavenPluginVersionChoice: 'latest'
-
-  #   - task: SonarCloudPublish@1
-  #     inputs:
-  #       pollingTimeoutSec: '300'
-
-  #   - task: PublishPipelineArtifact@1
-  #     inputs:
-  #       targetPath: './flashcard-service/target/flashcard-service-0.0.1-SNAPSHOT.jar'
-  #       artifact: 'flashcard-service'
-  #       publishLocation: 'pipeline'
-
-# - stage: DockerBuild
-#   displayName: Containerize Flashcard Microservice
-#   dependsOn: StaticAnalysis
+# - stage:
+#   displayName: Deployyyy
+#   dependsOn: 
+#     - LatestImage
+#     - CommitImage
+#   variables:
+#     - name: 'container'
+#       value: team4revops
+#     - name: 'image'
+#       value: $(service)
+#     - name: 'tag'
+#       value: latest
 #   jobs:
-#   - job: BuildPushAzure
+#   - job: ApplyAndDeploy
 #     steps:
+#     - task: HelmDeploy@0
+#       inputs:
+#         command: 'package'
+#         chartPath: './helm/testchart/'
+#         destination: './helm/'
+#     - script: find | grep helm
+#     - task: HelmDeploy@0
+#       inputs:
+#         connectionType: 'Kubernetes Service Connection'
+#         kubernetesServiceConnection: 'team4cluster'
+#         command: 'install'
+#         chartType: 'FilePath'
+#         chartPath: './helm/testchart-0.1.0.tgz'
+#         overrideValues: |
+#           flashcard.deploy.image.name=$(container)/$(image)
+#           flashcard.deploy.image.tag=$(tag)
+#           quiz.enabled=false
+#           gateway.enabled=false
+#         valueFile: './helm/testchart/values.yaml'
 
-#     - task: DownloadPipelineArtifact@2
-#       inputs:
-#         buildType: 'current'
-#         artifactName: 'flashcard-service'
-#         itemPattern: '**.jar'
-#         targetPath: './dockerize/'
-#     - task: Docker@2
-#       inputs:
-#         containerRegistry: 'team4-azure-containers'
-#         repository: 'team4containers'
-#         command: 'buildAndPush'
-#         Dockerfile: 'dockerize/flashcard.Dockerfile'
-#         tags: 'flashcard-build-$(Build.SourceVersion)'
 
-#   - job: BuildPushDocker
-#     steps:
-#     - task: DownloadPipelineArtifact@2
-#       inputs:
-#         buildType: 'current'
-#         artifactName: 'flashcard-service'
-#         itemPattern: '**.jar'
-#         targetPath: './dockerize/'
-#     - task: Docker@2
-#       inputs:
-#         containerRegistry: 'team4-docker-containers'
-#         repository: 'iamjarvi/project2-team4'
-#         command: 'buildAndPush'
-#         Dockerfile: 'dockerize/flashcard.Dockerfile'
-#         tags: 'flashcard-build-$(Build.SourceVersion)'
-  # - job: DiscordMessage
-  #   steps: 
-  #   - task: ado-discord-webhook@1
-  #     inputs:
-  #       channelId: '856587514218545203'
-  #       webhookKey: 'OmVq23OAAKWh6VQGfoiFE-DRlGwtDst19OLHedR9HaQ7eONnVdlBJlc1i8OiAUpz4hqd'
-  #       name: 'Team4-P2'
-  #       messageType: 'content'
-  #       content: |
-  #         __**Flashcard**__:
-  #         **Build Number** = $(Build.BuildNumber)
-  #         **Build Branch** = $(Build.SourceBranch)
-  #         **Build Status** = $(Agent.JobStatus)
-  #         **Build Reason** = $(Build.Reason)
+#       - task: Kubernetes@1
+#         inputs:
+#           connectionType: 'Kubernetes Service Connection'
+#           kubernetesServiceEndpoint: 'team4cluster'
+#           command: 'apply'
+#           useConfigurationFile: true
+#           configuration: './kube/dependencies/zookeeper_manifest.yml'
+#           secretType: 'dockerRegistry'
+#           containerRegistryType: 'Azure Container Registry'
+#           azureSubscriptionEndpointForSecrets: 'T4-Resources'
+#       - task: Kubernetes@1
+#         inputs:
+#           connectionType: 'Kubernetes Service Connection'
+#           kubernetesServiceEndpoint: 'team4cluster'
+#           command: 'apply'
+#           useConfigurationFile: true
+#           configuration: './kube/dependencies/kafka_manifest.yml'
+#           secretType: 'dockerRegistry'
+#           containerRegistryType: 'Azure Container Registry'
+#       - task: Kubernetes@1
+#         inputs:
+#           connectionType: 'Kubernetes Service Connection'
+#           kubernetesServiceEndpoint: 'team4cluster'
+#           command: 'apply'
+#           useConfigurationFile: true
+#           configuration: './kube/dependencies/consul_manifest.yml'
+#           secretType: 'dockerRegistry'
+#           containerRegistryType: 'Azure Container Registry'
+#       - task: Kubernetes@1
+#         inputs:
+#           connectionType: 'Kubernetes Service Connection'
+#           kubernetesServiceEndpoint: 'team4cluster'
+#           command: 'apply'
+#           useConfigurationFile: true
+#           configuration: './kube/configs/config_manifest.yml'
+#           secretType: 'dockerRegistry'
+#           containerRegistryType: 'Azure Container Registry'
+
+#       # - task: Kubernetes@1
+#       #   inputs:
+#       #       connectionType: 'Kubernetes Service Connection'
+#       #       kubernetesServiceEndpoint: 'team4cluster'
+#       #       command: 'apply'
+#       #       useConfigurationFile: true
+#       #       configuration: './kube/volumes/fcdbpvc_manifest.yml'
+#       #       arguments: '-f ./kube/volumes/fcdbpvc_manifest.yml'
+#       #       secretType: 'dockerRegistry' 
+#       #       containerRegistryType: 'Azure Container Registry'
+
+#       - task: replacetokens@3
+#         inputs:
+#           rootDirectory: './kube/microsvc/'
+#           targetFiles: '**/*_manifest.yml'
+#           encoding: 'auto'
+#           writeBOM: true
+#           actionOnMissing: 'warn'
+#           keepToken: true
+#           tokenPrefix: '__'
+#           tokenSuffix: '__'
+#           useLegacyPattern: false
+#           defaultValue: 'team4revops/flashcard-service:latest'
+#           enableTransforms: false
+#           enableTelemetry: false
+#       - task: KubernetesManifest@0
+#         inputs:
+#           action: 'deploy'
+#           kubernetesServiceConnection: 'team4cluster'
+#           manifests: './kube/microsvc/flashcard_manifest.yml'
+  

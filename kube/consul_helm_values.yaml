@@ -1,0 +1,6 @@
+syncCatalog:
+  enabled: true
+  default: false
+ui:
+  service:
+    type: LoadBalancer
