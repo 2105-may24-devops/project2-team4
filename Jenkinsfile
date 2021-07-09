@@ -16,6 +16,8 @@ node() {
         "quiz-service": "quiz-service-0.0.1-SNAPSHOT.jar"
     ]
 
+    def serviceChangeSet = null
+    def dockerChangeSet = null
     stage("Build, Test and Analyze") {
 
         // create env variable which ends succesfully without running anything if branch is 'master'
@@ -133,5 +135,8 @@ node() {
                                returnStatus: true
         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'newman/', reportFiles: '*.html', reportName: "Postman Tests for $BRANCH_NAME", reportTitles: "$BRANCH_NAME Postman Tests"])
         sh "ls newman"
+
+        println serviceChangeSet
+        println dockerChangeSet
     }
 }
