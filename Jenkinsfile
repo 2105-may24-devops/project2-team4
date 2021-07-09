@@ -134,7 +134,7 @@ node() {
         // run newman tests
         def newmanResults = sh script: "newman run postman/kube_tests.json --timeout-request 1500 --global-var 'base_url=${url}:8080' -r html", 
                                returnStatus: true
-        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'newman/', reportFiles: '*.html', reportName: "Postman Tests for $BRANCH_NAME", reportTitles: "$BRANCH_NAME Postman Tests"])
+        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'newman/', reportFiles: '*.html', reportName: "Postman Tests for $BRANCH_NAME", reportTitles: "$BRANCH_NAME Postman Tests"])
         
         if (newmanResults == 0) {
             testStageResult = true
