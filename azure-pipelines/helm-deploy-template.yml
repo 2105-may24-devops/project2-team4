@@ -45,10 +45,10 @@ stages:
         overrideValues: |
           ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
-          ${{ parameters.disableSvc1 }}.enabled=false
-          ${{ parameters.activeSvc }}.enabled=true
-          kafka.enabled=true
-          consul.enabled=true
-          ingress-nginx='true'
+          ${{ parameters.disableSvc1 }}.enabled='false'
+          ${{ parameters.activeSvc }}.enabled='true'
+          kafka.enabled='true'
+          consul.enabled='true'
+          ingress-nginx.enabled='true'
           deployAll=${{ parameters.deployAll }}
         valueFile: './helm/testchart/values.yaml'
