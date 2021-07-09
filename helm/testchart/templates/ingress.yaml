@@ -32,7 +32,7 @@ spec:
   - http:
       paths:
       - pathType: Prefix
-        path: "/flashcard(/|$)(.*)"
+        path: "/team4/flashcard(/|$)(.*)"
         backend:
           {{- with .Values.flashcard.service }}
           service:
@@ -41,7 +41,7 @@ spec:
               name: {{ .portName }}
           {{- end }}
       - pathType: Prefix
-        path: "/quiz(/|$)(.*)"
+        path: "/team4/quiz(/|$)(.*)"
         backend:
           {{- with .Values.quiz.service }}
           service:
