@@ -117,9 +117,10 @@ node() {
 
     stage("Deploy to AKS Test Environment") {
         sh "ls"
+        sh "kubectl config use-context ${env.development_cluster}"
         sh "helm upgrade test helm/testchart -i"
         deployStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
-        if (deployStatus == 1) {
+        if (deployStatus != 0) {
             currentBuild.result = 'FAILURE'
             error("Jenkins failed to deploy project to development AKS cluster")
         }
@@ -144,8 +145,15 @@ node() {
     }
 
     stage("Deployment") {
+        sh "kubectl config use-context ${env.production_cluster}"
+        sh "helm upgrade test helm/testchart -i"
+        deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
+        def productionStatus
+        if (deployExitStatus != 0) {
+            productionStatus = false
+        }
         def discord = load("jenkins/discord.groovy")
-        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult)
+        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, deployStageResult)
         discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
     }
 }
