@@ -141,19 +141,19 @@ node("p1-agent") {
         }
     }
 
-    stage("Deployment") {
+    // stage("Deployment") {
         
 
-        sh "kubectl config use-context ${env.production_cluster}"
-        sh "helm upgrade deploytest helm/testchart -i -n team4"
-        deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
-        def productionStatus = true
-        if (deployExitStatus != 0) {
-            productionStatus = false
-        }
-        def discord = load("jenkins/discord.groovy")
-        println "${testStageResult} tests"
-        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, productionStatus)
-        discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
-    }
+    //     sh "kubectl config use-context ${env.production_cluster}"
+    //     sh "helm upgrade deploytest helm/testchart -i -n team4"
+    //     deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
+    //     def productionStatus = true
+    //     if (deployExitStatus != 0) {
+    //         productionStatus = false
+    //     }
+    //     def discord = load("jenkins/discord.groovy")
+    //     println "${testStageResult} tests"
+    //     def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, productionStatus)
+    //     discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
+    // }
 }
