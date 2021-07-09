@@ -54,7 +54,6 @@ stages:
     containerName: team4revops
     imageName: $(service)
     tag: latest
-    deployAll: 'true'
   
 
 # - stage:
