@@ -14,7 +14,7 @@ def createDescription(dockerChanges, serviceChanges, postmanResults, deployStatu
         def serviceName = capitalizeServiceName(key)
         description = "${description}${serviceName}: ${ dockerChanges[key][1] || serviceChanges[key] ? 'Updated' : 'Unchanged' } \n"
     }
-    description = "$description Postman Tests: ${ postmanResults ? 'Passed' : 'Failed' } \n Deployment: ${deployStatus ? 'Succesful' : 'Failed'}"
+    description = "$description Postman Tests: ${ postmanResults ? 'Passed' : 'Failed' } \n Deployment: $deployStatus"
     return description
 }
 

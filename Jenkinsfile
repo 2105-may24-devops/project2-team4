@@ -141,19 +141,22 @@ node("p1-agent") {
         }
     }
 
-    // stage("Deployment") {
-        
-
-    //     sh "kubectl config use-context ${env.production_cluster}"
-    //     sh "helm upgrade deploytest helm/testchart -i -n team4"
-    //     deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
-    //     def productionStatus = true
-    //     if (deployExitStatus != 0) {
-    //         productionStatus = false
-    //     }
-    //     def discord = load("jenkins/discord.groovy")
-    //     println "${testStageResult} tests"
-    //     def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, productionStatus)
-    //     discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
-    // }
+    stage("Deployment") {
+        def discord = load("jenkins/discord.groovy")
+        if (env.deploy_master == "yes" && BRANCH_NAME == 'master') {
+            sh "kubectl config use-context ${env.production_cluster}"
+            sh "helm upgrade deploytest helm/testchart -i -n team4"
+            deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
+            def productionStatus = true
+            if (deployExitStatus != 0) {
+                productionStatus = false
+            }
+            println "${testStageResult} tests"
+            def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, "${productionStatus ? 'Succeeded' : 'Failed'}")
+            discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
+        } else {
+            def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, 'No Reason to Deploy')
+            discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
+        }
+    }
 }
