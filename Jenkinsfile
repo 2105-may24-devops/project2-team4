@@ -148,7 +148,7 @@ node("p1-agent") {
         if (env.deploy_master == "yes" && BRANCH_NAME == 'master' && testStageResult) {
             try {
             sh "kubectl config use-context ${env.production_cluster}"
-            sh """helm upgrade test helm/testchart -i \
+            sh """helm upgrade deploytest helm/testchart -i \
                     --set flashcard.image.name=${env.container_registry}/flashcard-service \
                     --set flashcard.image.tag=latest \
                     --set quiz.image.name=${env.container_registry}/quiz-service \
