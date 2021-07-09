@@ -1,0 +1,4 @@
+This is HelpText
+Release Name is {{ .Release.Name }}
+ChartName is {{ .Chart.Name }}
+
