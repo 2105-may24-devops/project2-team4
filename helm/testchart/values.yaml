@@ -33,7 +33,7 @@ quiz:
     resources:
       limits:
         memory: 1.5Gi
-        cpu: 1000m
+        cpu: 200m
   service:
     name: quiz-svc
     type: ClusterIP
@@ -58,7 +58,7 @@ gateway:
     resources:
       limits:
         memory: 1Gi
-        cpu: 300m
+        cpu: 200m
   service:
     name: gateway-svc
     type: LoadBalancer
