@@ -6,16 +6,8 @@ parameters:
     type: string
   - name: 'tag'
     type: string
-  - name: 'helmCommand'
+  - name: activeSvc
     type: string
-  - name: 'disableSvc1'
-    type: string
-  - name: 'activeSvc'
-    type: string
-  - name: 'deployAll'
-    type: string
-  
-
 
 stages:
 - stage:
@@ -36,8 +28,8 @@ stages:
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceConnection: 'team4cluster'
-        command: '${{ parameters.helmCommand }}'
-        arguments: '--install'
+        command: 'upgrade'
+        arguments: '--install --reuse-values --atomic'
         releaseName: 'dev'
         namespace: 'test'
         chartType: 'FilePath'
@@ -45,10 +37,5 @@ stages:
         overrideValues: |
           ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
-          ${{ parameters.disableSvc1 }}.enabled='false'
-          ${{ parameters.activeSvc }}.enabled='true'
-          kafka.enabled='true'
-          consul.enabled='true'
-          ingress-nginx.enabled='true'
-          deployAll=${{ parameters.deployAll }}
+       
         valueFile: './helm/testchart/values.yaml'
