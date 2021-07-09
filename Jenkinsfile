@@ -3,7 +3,7 @@ def getMapValue(jarMap, key) {
     return jarMap[key]
 }
 
-node() {
+node("p1-agent") {
     // add to env files
     def requirements = ["mvn", "docker", "kubectl", "helm", "newman"]
     def sonarProjectKeys = ["flashcard-service": "2105-may24-devops-p2t4-flashcard",
@@ -18,7 +18,7 @@ node() {
 
     def serviceChangeSet = null
     def dockerChangeSet = null
-    def testStageResult = null
+    def testStageResult = true
     stage("Build, Test and Analyze") {
 
         // create env variable which ends succesfully without running anything if branch is 'master'
@@ -133,13 +133,12 @@ node() {
         // sh script: "helm install test helm/testchart --set ingress-nginx.extraArgs.watch-namespace=null"
         // sh "sleep 60s"
         // run newman tests
-        def newmanResults = sh script: "newman run postman/kube_tests.json --timeout-request 1500 --global-var 'base_url=${url}:8080' -r html", 
-                               returnStatus: true
+        def p = sh script: "newman run postman/kube_tests.json --timeout-request 1500 --global-var 'base_url=${url}:8080' -r html", 
+        println p
+        newmanResults = sh script: "newman run postman/kube_tests.json --timeout-request 1500 --global-var 'base_url=${url}:8080'", returnStatus: true
         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'newman/', reportFiles: '*.html', reportName: "Postman Tests for $BRANCH_NAME", reportTitles: "$BRANCH_NAME Postman Tests"])
         
-        if (newmanResults == 0) {
-            testStageResult = true
-        } else {
+        if (newmanResults != 0) {
             testStageResult = false
         }
     }
@@ -153,6 +152,7 @@ node() {
             productionStatus = false
         }
         def discord = load("jenkins/discord.groovy")
+        println "${testStageResult} tests"
         def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, productionStatus)
         discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
     }
