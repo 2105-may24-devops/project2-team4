@@ -54,6 +54,7 @@ stages:
     containerName: team4revops
     imageName: $(service)
     tag: latest
+    activeSvc: flashcard
   
 
 # - stage:
