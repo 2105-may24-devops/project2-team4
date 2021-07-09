@@ -13,7 +13,7 @@ ingress-nginx:
           kubernetes.io/os: linux 
     service: 
       annotations: 
-        service.beta.kubernetes.io/azure-dns-label-name: p2team4Revops
+        service.beta.kubernetes.io/azure-dns-label-name: p2team4revopsmd
     metrics:
       enabled: true 
       serviceMonitor: 
@@ -258,7 +258,7 @@ kube-prometheus-stack:
       ## Hosts must be provided if Ingress is enabled.
       ##
       hosts:
-      - p2team4Revops.centralus.cloudapp.azure.com
+      - p2team4revopsmd.centralus.cloudapp.azure.com
 
       ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
       ##
@@ -276,7 +276,7 @@ kube-prometheus-stack:
       tls:
       - secretName: general-tls
         hosts:
-        - p2team4Revops.centralus.cloudapp.azure.com
+        - p2team4revopsmd.centralus.cloudapp.azure.com
 
     ## Configuration for Alertmanager secret
     ##
@@ -685,7 +685,7 @@ kube-prometheus-stack:
       # hosts:
       #   - grafana.domain.com
       hosts:
-      - p2team4Revops.centralus.cloudapp.azure.com
+      - p2team4revopsmd.centralus.cloudapp.azure.com
 
       ## Path for grafana ingress
       path: /grafana
@@ -697,7 +697,7 @@ kube-prometheus-stack:
       tls:
       - secretName: general-tls
         hosts:
-        - p2team4Revops.centralus.cloudapp.azure.com
+        - p2team4revopsmd.centralus.cloudapp.azure.com
 
     sidecar:
       dashboards:
@@ -789,7 +789,7 @@ kube-prometheus-stack:
     grafana.ini:
       server:
         # domain: mysb.grafanasite.com
-        root_url: https://p2team4Revops.centralus.cloudapp.azure.com/grafana/
+        root_url: https://p2team4revopsmd.centralus.cloudapp.azure.com/grafana/
         serve_from_sub_path: true
 
   ## Component scraping the kube api server
@@ -1828,7 +1828,7 @@ kube-prometheus-stack:
       # hosts:
       #   - prometheus.domain.com
       hosts:
-      - p2team4Revops.centralus.cloudapp.azure.com
+      - p2team4revopsmd.centralus.cloudapp.azure.com
 
       ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
       ##
@@ -1846,7 +1846,7 @@ kube-prometheus-stack:
       tls:
       - secretName: general-tls
         hosts:
-        - p2team4Revops.centralus.cloudapp.azure.com
+        - p2team4revopsmd.centralus.cloudapp.azure.com
 
     ## Configuration for creating an Ingress that will map to each Prometheus replica service
     ## prometheus.servicePerReplica must be enabled

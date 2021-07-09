@@ -4,7 +4,7 @@ deployAll: true
 # namePrefix: null
 
 flashcard:
-  enabled: false
+  enabled: true
   port: 8089
   deploy:
     replicas: 2
@@ -22,7 +22,7 @@ flashcard:
     portName: fc-port
 
 quiz:
-  enabled: false
+  enabled: true
   port: 8090
   deploy:
     replicas: 1
@@ -42,6 +42,9 @@ quiz:
 ingress:
   enabled: true
   name: myingress
+  host:
+    hostlabel: p2team4revopsmd
+    region: eastus
 
 gateway:
   enabled: false
@@ -96,7 +99,7 @@ zookeeper:
 
 kafka:
   # flashcard microservice will fail without kafka.
-  enabled: false
+  enabled: true
   port: 9092
   deploy:
     name: kafka-deploy
@@ -141,12 +144,12 @@ ingress-nginx:
       patch: 
         nodeSelector: 
           kubernetes.io/os: linux 
-    # service: 
-    #   annotations: 
-    #     service.beta.kubernetes.io/azure-dns-label-name: p2team4Revops
+    service: 
+      annotations: 
+        service.beta.kubernetes.io/azure-dns-label-name: p2team4revopsmd
     # metrics:
     #   enabled: true 
     #   serviceMonitor: 
     #     enabled: true 
-    extraArgs:
-      watch-namespace: team4
+    # extraArgs:
+    #   watch-namespace: team4

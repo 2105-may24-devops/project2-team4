@@ -208,37 +208,40 @@ alertmanager:
   #       {{ end }}
 
   ingress:
-    enabled: false
+    enabled: true
 
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    # ingressClassName: nginx
+    ingressClassName: nginx
 
-    annotations: {}
+    # https://cert-manager.io/docs/usage/ingress/#supported-annotations
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-staging
 
     labels: {}
 
     ## Hosts must be provided if Ingress is enabled.
     ##
-    hosts: []
-      # - alertmanager.domain.com
+    hosts:
+    - p2team4revopsmd.eastus.cloudapp.azure.com
 
     ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
     ##
-    paths: []
-    # - /
+    paths:
+    - /alertmanager
 
     ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
     ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
-    # pathType: ImplementationSpecific
+    pathType: Prefix
 
     ## TLS configuration for Alertmanager Ingress
     ## Secret must be manually created in the namespace
+    ## (unless ingress-shim creates it automatically based on the annotation)
     ##
-    tls: []
-    # - secretName: alertmanager-general-tls
-    #   hosts:
-    #   - alertmanager.example.com
+    tls:
+    - secretName: general-tls
+      hosts:
+      - p2team4revopsmd.eastus.cloudapp.azure.com
 
   ## Configuration for Alertmanager secret
   ##
@@ -493,7 +496,7 @@ alertmanager:
     ## 	The route prefix Alertmanager registers HTTP handlers for. This is useful, if using ExternalURL and a proxy is rewriting HTTP routes of a request, and the actual ExternalURL is still true,
     ## but the server serves requests under a different route prefix. For example for use with kubectl proxy.
     ##
-    routePrefix: /
+    routePrefix: /alertmanager
 
     ## If set to true all actions on the underlying managed objects are not going to be performed, except for delete actions.
     ##
@@ -630,13 +633,12 @@ grafana:
   ingress:
     ## If true, Grafana Ingress will be created
     ##
-    enabled: false
+    enabled: true
 
     ## Annotations for Grafana Ingress
     ##
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-staging
 
     ## Labels to be added to the Ingress
     ##
@@ -647,18 +649,20 @@ grafana:
     ##
     # hosts:
     #   - grafana.domain.com
-    hosts: []
+    hosts:
+    - p2team4revopsmd.eastus.cloudapp.azure.com
 
     ## Path for grafana ingress
-    path: /
+    path: /grafana
 
     ## TLS configuration for grafana Ingress
     ## Secret must be manually created in the namespace
+    ## (unless ingress-shim creates it automatically based on the annotation)
     ##
-    tls: []
-    # - secretName: grafana-general-tls
-    #   hosts:
-    #   - grafana.example.com
+    tls:
+    - secretName: general-tls
+      hosts:
+      - p2team4revopsmd.eastus.cloudapp.azure.com
 
   sidecar:
     dashboards:
@@ -746,6 +750,12 @@ grafana:
     #   targetLabel: nodename
     #   replacement: $1
     #   action: replace
+
+  grafana.ini:
+    server:
+      # domain: mysb.grafanasite.com
+      root_url: https://p2team4revopsmd.eastus.cloudapp.azure.com/grafana/
+      serve_from_sub_path: true
 
 ## Component scraping the kube api server
 ##
@@ -1767,13 +1777,14 @@ prometheus:
     #   - thanos-gateway.domain.com
 
   ingress:
-    enabled: false
+    enabled: true
 
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    # ingressClassName: nginx
+    ingressClassName: nginx
 
-    annotations: {}
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-staging
     labels: {}
 
     ## Hostnames.
@@ -1781,24 +1792,26 @@ prometheus:
     ##
     # hosts:
     #   - prometheus.domain.com
-    hosts: []
+    hosts:
+    - p2team4revopsmd.eastus.cloudapp.azure.com
 
     ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
     ##
-    paths: []
-    # - /
+    paths:
+    - /prometheus
 
     ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
     ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
-    # pathType: ImplementationSpecific
+    pathType: Prefix
 
     ## TLS configuration for Prometheus Ingress
     ## Secret must be manually created in the namespace
+    ## (unless ingress-shim creates it automatically based on the annotation)
     ##
-    tls: []
-      # - secretName: prometheus-general-tls
-      #   hosts:
-      #     - prometheus.example.com
+    tls:
+    - secretName: general-tls
+      hosts:
+      - p2team4revopsmd.eastus.cloudapp.azure.com
 
   ## Configuration for creating an Ingress that will map to each Prometheus replica service
   ## prometheus.servicePerReplica must be enabled
@@ -2047,7 +2060,7 @@ prometheus:
     ## prometheus resource to be created with selectors based on values in the helm deployment,
     ## which will also match the servicemonitors created
     ##
-    serviceMonitorSelectorNilUsesHelmValues: true
+    serviceMonitorSelectorNilUsesHelmValues: false
 
     ## ServiceMonitors to be selected for target discovery.
     ## If {}, select all ServiceMonitors
@@ -2147,7 +2160,7 @@ prometheus:
     ## Prefix used to register routes, overriding externalUrl route.
     ## Useful for proxies that rewrite URLs.
     ##
-    routePrefix: /
+    routePrefix: /prometheus
 
     ## Standard object's metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
     ## Metadata Labels and Annotations gets propagated to the prometheus pods.
@@ -2521,4 +2534,3 @@ prometheus:
     ## https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#podmetricsendpoint
     ##
     # podMetricsEndpoints: []
-

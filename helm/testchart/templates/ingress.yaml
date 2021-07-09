@@ -1,4 +1,4 @@
-{{- if and .Values.deployAll .Values.ingress.enabled }}
+{{- if or .Values.deployAll .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -28,7 +28,6 @@ spec:
   {{- end }}
   {{- end }}
   rules:
-    # host: <Host> #Placeholder. Dunno what to put. may be optional.
   - http:
       paths:
       - pathType: Prefix
@@ -49,4 +48,9 @@ spec:
             port: 
               name: {{ .portName }}
           {{- end }}
+    {{- if .Values.ingress.host }}
+    {{- with .Values.ingress.host }}
+    host: p2team4revopsmd.eastus.cloudapp.azure.com
+    {{- end }}
+    {{- end }}
 {{- end }}
