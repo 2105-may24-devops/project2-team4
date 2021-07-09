@@ -126,18 +126,9 @@ node("p1-agent") {
         }
         
         
-        // dont commit
         def url = sh script: "kubectl get svc/gateway-svc -o jsonpath='{.status.loadBalancer.ingress[0].ip}'", returnStdout: true
-        println url
-        println "${url}:8080"
-        // sh script: "helm install test helm/testchart --set ingress-nginx.extraArgs.watch-namespace=null"
-        // sh "sleep 60s"
-        // run newman tests
-        //def p = sh script: "newman run postman/kube_tests.json --timeout-request 1500 --global-var 'base_url=${url}:8080' -r html"
-        //println p
         newmanResults = sh script: "newman run postman/kube_tests.json --timeout-request 1500 --global-var 'base_url=${url}:8080'", returnStatus: true
-        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'newman/', reportFiles: '*.html', reportName: "Postman Tests for $BRANCH_NAME", reportTitles: "$BRANCH_NAME Postman Tests"])
-        
+
         if (newmanResults != 0) {
             testStageResult = false
         }
