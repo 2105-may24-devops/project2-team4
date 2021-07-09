@@ -32,7 +32,7 @@ node() {
         }
         def artifactsExist = load("jenkins/lastBuildWithArtifacts.groovy")
         def changes = load("jenkins/changes.groovy")
-        def discord = load("jenkins/discord.groovy")
+        // def discord = load("jenkins/discord.groovy")
         // find which services were updated in the most recent push and only run sonarcloud analysis on those.
         // println "${currentBuild.changeSets}, ${currentBuild.changeSets.getClass()}"
 
@@ -111,8 +111,8 @@ node() {
         }
         parallel(parallelDocker)
 
-        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet)
-        discord.sendDiscordMessage(desc, "Deploying to AKS Development to Run Postman Tests")
+        // def desc = discord.createDescription(dockerChangeSet, serviceChangeSet)
+        // discord.sendDiscordMessage(desc, "Deploying to AKS Development to Run Postman Tests")
     }
 
     stage("Deploy to AKS Test Environment") {
@@ -141,15 +141,11 @@ node() {
         } else {
             testStageResult = false
         }
-        
-        sh "ls newman"
-
-        println serviceChangeSet
-        println dockerChangeSet
     }
 
     stage("Deployment") {
-        println testStageResult
-        println "le fin"
+        def discord = load("jenkins/discord.groovy")
+        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult)
+        discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
     }
 }
