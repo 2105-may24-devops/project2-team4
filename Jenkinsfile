@@ -127,7 +127,7 @@ node() {
         println url
         println "${url}:8080"
         // sh script: "helm install test helm/testchart --set ingress-nginx.extraArgs.watch-namespace=null"
-        sh "sleep 60s"
+        // sh "sleep 60s"
         // run newman tests
         def newmanResults = sh script: "newman run postman/kube_tests.json --timeout-request 1500 --global-var 'base_url=${url}:8080' -r html", 
                                returnStatus: true
