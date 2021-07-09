@@ -143,7 +143,7 @@ node("p1-agent") {
 
     stage("Deployment") {
         def discord = load("jenkins/discord.groovy")
-        if (env.deploy_master == "yes" && BRANCH_NAME == 'master') {
+        if (env.deploy_master == "yes" && BRANCH_NAME == 'master' && testStageResult) {
             sh "kubectl config use-context ${env.production_cluster}"
             sh "helm upgrade deploytest helm/testchart -i -n team4"
             deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
@@ -154,8 +154,11 @@ node("p1-agent") {
             println "${testStageResult} tests"
             def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, "${productionStatus ? 'Succeeded' : 'Failed'}")
             discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
+        } else if (env.deploy_master == "yes" && BRANCH_NAME == 'master' && testStageResult) {
+            def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, 'Build Failed Postman Tests')
+            discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")          
         } else {
-            def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, 'No Reason to Deploy')
+            def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, 'Non-Deploy Build')
             discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
         }
     }
