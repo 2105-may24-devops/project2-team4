@@ -153,7 +153,9 @@ node("p1-agent") {
                     --set quiz.image.name=${env.container_registry}/quiz-service \
                     --set quiz.image.tag=latest \
                     --set gateway.image.name=${env.container_registry}/gateway-service \
-                    --set gateway.image.tag=latest
+                    --set gateway.image.tag=latest \
+                    --set ingress.host=true \
+                    --set ingress-nginx.enabled=false
                """
             deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
             def productionStatus = true
@@ -167,7 +169,7 @@ node("p1-agent") {
                 def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, 'Failed')
                 discord.sendDiscordMessage(desc, "Jenkins!")
             }
-        } else if (env.deploy_master == "yes" && BRANCH_NAME == 'master' && testStageResult) {
+        } else if (env.deploy_master == "yes" && BRANCH_NAME == 'master' && !testStageResult) {
             def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, 'Build Failed Postman Tests')
             discord.sendDiscordMessage(desc, "Jenkins!")          
         } else {
