@@ -141,12 +141,12 @@ ingress-nginx:
       patch: 
         nodeSelector: 
           kubernetes.io/os: linux 
-    service: 
-      annotations: 
-        service.beta.kubernetes.io/azure-dns-label-name: p2team4Revops
-    metrics:
-      enabled: true 
-      serviceMonitor: 
-        enabled: true 
+    # service: 
+    #   annotations: 
+    #     service.beta.kubernetes.io/azure-dns-label-name: p2team4Revops
+    # metrics:
+    #   enabled: true 
+    #   serviceMonitor: 
+    #     enabled: true 
     extraArgs:
       watch-namespace: team4
