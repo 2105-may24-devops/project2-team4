@@ -28,7 +28,7 @@ stages:
     - task: HelmDeploy@0
       inputs:
         connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceConnection: 'team4cluster'
+        kubernetesServiceConnection: 'NicksAks'
         command: 'upgrade'
         arguments: '--install --atomic --reuse-values --dry-run'
         releaseName: 'deploytest'
@@ -38,7 +38,7 @@ stages:
         overrideValues: |
           ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
-          ingress-nginx.enabled=true
+          ingress-nginx.enabled=false
        
         valueFile: './helm/testchart/values.yaml'
 
@@ -77,7 +77,7 @@ stages:
     - task: HelmDeploy@0
       inputs:
         connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceConnection: 'team4cluster'
+        kubernetesServiceConnection: 'team4dev2'
         command: 'upgrade'
         arguments: '--install --atomic --reuse-values --dry-run'
         releaseName: 'deploytest'
@@ -87,7 +87,7 @@ stages:
         overrideValues: |
           ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
-          ingress-nginx.enabled=true
+          ingress-nginx.enabled=false
        
         valueFile: './helm/testchart/values.yaml'
 
@@ -98,12 +98,12 @@ stages:
         command: 'upgrade'
         arguments: '--install --atomic --reuse-values --create-namespace'
         releaseName: 'deploytest'
-        namespace: 'team4'
+        namespace: 'dev'
         chartType: 'FilePath'
         chartPath: './helm/team4quizapp-0.1.0.tgz'
         overrideValues: |
           ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
           ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
-          ingress-nginx.enabled=true
+          ingress-nginx.enabled=false
        
         valueFile: './helm/testchart/values.yaml'
