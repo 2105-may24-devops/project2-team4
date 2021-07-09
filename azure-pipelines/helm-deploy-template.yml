@@ -24,6 +24,7 @@ stages:
         chartPath: './helm/testchart/'
         destination: './helm/'
     - script: find | grep helm
+    - script: ./helm/temp/commands.sh
     - task: HelmDeploy@0
       inputs:
         connectionType: 'Kubernetes Service Connection'
@@ -31,7 +32,7 @@ stages:
         command: 'upgrade'
         arguments: '--install --reuse-values --atomic'
         releaseName: 'dev'
-        namespace: 'test'
+        namespace: 'dev'
         chartType: 'FilePath'
         chartPath: './helm/team4quizapp-0.1.0.tgz'
         overrideValues: |
