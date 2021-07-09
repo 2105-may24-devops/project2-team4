@@ -24,25 +24,38 @@ stages:
         chartPath: './helm/testchart/'
         destination: './helm/'
     - script: find | grep helm
-    - script: |
-        helm upgrade --install realease1 ./testchart/ \
-        --set flashcard.image.name=team4revops/flashcard-service \
-        --set flashcard.image.tag=latest \
-        --reuse-values --atomic
+   
     # - script: ./helm/temp/commands.sh
-    # - task: HelmDeploy@0
-    #   inputs:
-    #     connectionType: 'Kubernetes Service Connection'
-    #     kubernetesServiceConnection: 'team4cluster'
-    #     command: 'upgrade'
-    #     arguments: '--install --atomic' #--reuse-values
-    #     releaseName: 'dev'
-    #     namespace: 'dev'
-    #     chartType: 'FilePath'
-    #     chartPath: './helm/team4quizapp-0.1.0.tgz'
-    #     overrideValues: |
-    #       ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
-    #       ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
-    #       ingress-nginx.enabled=true
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: 'team4cluster'
+        command: 'upgrade'
+        arguments: '--install --atomic --reuse-values --dry-run'
+        releaseName: 'deploytest'
+        namespace: 'dev'
+        chartType: 'FilePath'
+        chartPath: './helm/team4quizapp-0.1.0.tgz'
+        overrideValues: |
+          ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
+          ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
+          ingress-nginx.enabled=true
        
-    #     valueFile: './helm/testchart/values.yaml'
+        valueFile: './helm/testchart/values.yaml'
+
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: 'team4cluster'
+        command: 'upgrade'
+        arguments: '--install --atomic --reuse-values'
+        releaseName: 'deploytest'
+        namespace: 'dev'
+        chartType: 'FilePath'
+        chartPath: './helm/team4quizapp-0.1.0.tgz'
+        overrideValues: |
+          ${{ parameters.activeSvc }}.deploy.image.name=${{ parameters.containerName}}/${{ parameters.imageName }}
+          ${{ parameters.activeSvc }}.deploy.image.tag=${{ parameters.tag }}
+          ingress-nginx.enabled=true
+       
+        valueFile: './helm/testchart/values.yaml'
