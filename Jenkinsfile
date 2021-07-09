@@ -126,7 +126,6 @@ node("p1-agent") {
         }
         
         
-        // dont commit
         def url = sh script: "kubectl get svc/gateway-svc -o jsonpath='{.status.loadBalancer.ingress[0].ip}'", returnStdout: true
         println url
         println "${url}:8080"
