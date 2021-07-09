@@ -118,7 +118,14 @@ node("p1-agent") {
     stage("Deploy to AKS Test Environment") {
         sh "ls"
         sh "kubectl config use-context ${env.development_cluster}"
-        sh "helm upgrade test helm/testchart -i"
+        sh """helm upgrade test helm/testchart -i \
+              --set flashcard.image.name=${env.container_registry}/flashcard-service \
+              --set flashcard.image.tag=${BRANCH_NAME} \
+              --set quiz.image.name=${env.container_registry}/quiz-service \
+              --set quiz.image.tag=${BRANCH_NAME} \
+              --set gateway.image.name=${env.container_registry}/gateway-service \
+              --set gateway.image.tag=${BRANCH_NAME}
+              """
         deployStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
         if (deployStatus != 0) {
             currentBuild.result = 'FAILURE'
@@ -134,17 +141,19 @@ node("p1-agent") {
         }
     }
 
-    stage("Deployment") {
-        sh "kubectl config use-context ${env.production_cluster}"
-        sh "helm upgrade test helm/testchart -i"
-        deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
-        def productionStatus = true
-        if (deployExitStatus != 0) {
-            productionStatus = false
-        }
-        def discord = load("jenkins/discord.groovy")
-        println "${testStageResult} tests"
-        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, productionStatus)
-        discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
-    }
+    // stage("Deployment") {
+        
+
+    //     sh "kubectl config use-context ${env.production_cluster}"
+    //     sh "helm upgrade deploytest helm/testchart -i -n team4"
+    //     deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
+    //     def productionStatus = true
+    //     if (deployExitStatus != 0) {
+    //         productionStatus = false
+    //     }
+    //     def discord = load("jenkins/discord.groovy")
+    //     println "${testStageResult} tests"
+    //     def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, productionStatus)
+    //     discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
+    // }
 }
