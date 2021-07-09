@@ -145,7 +145,7 @@ node() {
 
     stage("Deployment") {
         def discord = load("jenkins/discord.groovy")
-        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet)
+        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult)
         discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
     }
 }
