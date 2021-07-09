@@ -16,38 +16,109 @@ parameters:
   - name: 'strategy'
     type: string
 
-
-
 stages:
-- stage: Deploy
-  displayName: Deploy stage
-  dependsOn: Build
+- stage:
+  displayName: Deployyyy
+  dependsOn: 
+    - LatestImage
+    - CommitImage
+  variables:
+    - name: 'container'
+      value: team4revops
+    - name: 'image'
+      value: $(service)
+    - name: 'tag'
+      value: latest
   jobs:
-  - deployment: Deploy
-    displayName: Deploy job
-    pool:
-      vmImage: $(vmImageName)
-    environment: ${{ parameters.environment }}
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          # I think it needs this to pull from ACR.
-          - task: KubernetesManifest@0
-            displayName: Create imagePullSecret
-            inputs:
-            action: createSecret
-            secretName: $(imagePullSecret)
-            namespace: ${{ parameters.namespace }}
-            dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
-              
-          - task: KubernetesManifest@0
-            displayName: Deploy to Kubernetes cluster
-            inputs:
-              action: deploy
-              namespace: ${{ parameters.namespace }}
-              manifests: |
-                ${{ parameters.manifest}}
-              
-              containers: |
-                ${{ parameters.containers }}
+  - job: ApplyAndDeploy
+    steps:
+    - task: HelmDeploy@0
+      inputs:
+        command: 'package'
+        chartPath: './helm/testchart/'
+        destination: './helm/'
+    - script: find | grep helm
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: 'team4cluster'
+        command: 'install'
+        chartType: 'FilePath'
+        chartPath: './helm/testchart-0.1.0.tgz'
+        overrideValues: |
+          flashcard.deploy.image.name=$(container)/$(image)
+          flashcard.deploy.image.tag=$(tag)
+          quiz.enabled=false
+          gateway.enabled=false
+        valueFile: './helm/testchart/values.yaml'
+
+
+      - task: Kubernetes@1
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceEndpoint: 'team4cluster'
+          command: 'apply'
+          useConfigurationFile: true
+          configuration: './kube/dependencies/zookeeper_manifest.yml'
+          secretType: 'dockerRegistry'
+          containerRegistryType: 'Azure Container Registry'
+          azureSubscriptionEndpointForSecrets: 'T4-Resources'
+      - task: Kubernetes@1
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceEndpoint: 'team4cluster'
+          command: 'apply'
+          useConfigurationFile: true
+          configuration: './kube/dependencies/kafka_manifest.yml'
+          secretType: 'dockerRegistry'
+          containerRegistryType: 'Azure Container Registry'
+      - task: Kubernetes@1
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceEndpoint: 'team4cluster'
+          command: 'apply'
+          useConfigurationFile: true
+          configuration: './kube/dependencies/consul_manifest.yml'
+          secretType: 'dockerRegistry'
+          containerRegistryType: 'Azure Container Registry'
+      - task: Kubernetes@1
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceEndpoint: 'team4cluster'
+          command: 'apply'
+          useConfigurationFile: true
+          configuration: './kube/configs/config_manifest.yml'
+          secretType: 'dockerRegistry'
+          containerRegistryType: 'Azure Container Registry'
+
+      - task: Kubernetes@1
+        inputs:
+            connectionType: 'Kubernetes Service Connection'
+            kubernetesServiceEndpoint: 'team4cluster'
+            command: 'apply'
+            useConfigurationFile: true
+            configuration: './kube/volumes/fcdbpvc_manifest.yml'
+            arguments: '-f ./kube/volumes/fcdbpvc_manifest.yml'
+            secretType: 'dockerRegistry' 
+            containerRegistryType: 'Azure Container Registry'
+
+      - task: replacetokens@3
+        inputs:
+          rootDirectory: './kube/microsvc/'
+          targetFiles: '**/*_manifest.yml'
+          encoding: 'auto'
+          writeBOM: true
+          actionOnMissing: 'warn'
+          keepToken: true
+          tokenPrefix: '__'
+          tokenSuffix: '__'
+          useLegacyPattern: false
+          defaultValue: 'team4revops/flashcard-service:latest'
+          enableTransforms: false
+          enableTelemetry: false
+      - task: KubernetesManifest@0
+        inputs:
+          action: 'deploy'
+          kubernetesServiceConnection: 'team4cluster'
+          manifests: './kube/microsvc/flashcard_manifest.yml'
+  
