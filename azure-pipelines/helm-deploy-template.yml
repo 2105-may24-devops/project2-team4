@@ -30,7 +30,7 @@ stages:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceConnection: 'team4cluster'
         command: 'upgrade'
-        arguments: '--install --reuse-values --atomic'
+        arguments: '--install --atomic' #--reuse-values
         releaseName: 'dev'
         namespace: 'dev'
         chartType: 'FilePath'
