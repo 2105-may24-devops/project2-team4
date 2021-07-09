@@ -149,11 +149,11 @@ node("p1-agent") {
             sh "kubectl config use-context ${env.production_cluster}"
             sh """helm upgrade test helm/testchart -i \
                     --set flashcard.image.name=${env.container_registry}/flashcard-service \
-                    --set flashcard.image.tag=${BRANCH_NAME} \
+                    --set flashcard.image.tag=latest \
                     --set quiz.image.name=${env.container_registry}/quiz-service \
-                    --set quiz.image.tag=${BRANCH_NAME} \
+                    --set quiz.image.tag=latest \
                     --set gateway.image.name=${env.container_registry}/gateway-service \
-                    --set gateway.image.tag=${BRANCH_NAME}
+                    --set gateway.image.tag=latest
                """
             deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
             def productionStatus = true
