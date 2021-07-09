@@ -135,18 +135,18 @@ ingress-nginx:
   enabled: false
   controller: 
     replicaCount: 2 
-    nodeSelector: 
-      kubernetes.io/os: linux 
-    defaultBackend: 
-      nodeSelector: 
-        kubernetes.io/os: linux 
-    admissionWebhooks: 
-      patch: 
-        nodeSelector: 
-          kubernetes.io/os: linux 
-    service: 
-      annotations: 
-        service.beta.kubernetes.io/azure-dns-label-name: p2team4revopsmd
+    # nodeSelector: 
+    #   kubernetes.io/os: linux 
+    # defaultBackend: 
+    #   nodeSelector: 
+    #     kubernetes.io/os: linux 
+    # admissionWebhooks: 
+    #   patch: 
+    #     nodeSelector: 
+    #       kubernetes.io/os: linux 
+    # service: 
+    #   annotations: 
+    #     service.beta.kubernetes.io/azure-dns-label-name: p2team4revopsmd
     # metrics:
     #   enabled: true 
     #   serviceMonitor: 

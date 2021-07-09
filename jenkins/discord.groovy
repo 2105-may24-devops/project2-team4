@@ -5,7 +5,7 @@ def capitalizeServiceName(serviceName) {
     return "${split[0].charAt(0).toUpperCase()}${split[0].substring(1)} ${split[1].charAt(0).toUpperCase()}${split[1].substring(1)}"
 }
 
-def createDescription(dockerChanges, serviceChanges) {
+def createDescription(dockerChanges, serviceChanges, postmanResults, deployStatus) {
     // both dockerChanges and serviceChanges must have the same keys 
     def description = "Node Name: $NODE_NAME \nJob Name: $JOB_NAME \nBuild ID: $BUILD_ID \n"
 
@@ -14,13 +14,14 @@ def createDescription(dockerChanges, serviceChanges) {
         def serviceName = capitalizeServiceName(key)
         description = "${description}${serviceName}: ${ dockerChanges[key][1] || serviceChanges[key] ? 'Updated' : 'Unchanged' } \n"
     }
+    description = "$description Postman Tests: ${ postmanResults ? 'Passed' : 'Failed' } \n Deployment: ${deployStatus ? 'Succesful' : 'Failed'}"
     return description
 }
 
 
 def sendDiscordMessage(description, footer) {
     discordSend description: description, 
-        footer: footer, 
+        footer: footer,
         image: '', 
         link: "http://52.142.60.104:8080/jenkins/job/project2-team4/job/$BRANCH_NAME/$BUILD_ID", 
         result: "$currentBuild.currentResult", 

@@ -18,6 +18,7 @@ node() {
 
     def serviceChangeSet = null
     def dockerChangeSet = null
+    def testStageResult = null
     stage("Build, Test and Analyze") {
 
         // create env variable which ends succesfully without running anything if branch is 'master'
@@ -31,7 +32,7 @@ node() {
         }
         def artifactsExist = load("jenkins/lastBuildWithArtifacts.groovy")
         def changes = load("jenkins/changes.groovy")
-        def discord = load("jenkins/discord.groovy")
+        // def discord = load("jenkins/discord.groovy")
         // find which services were updated in the most recent push and only run sonarcloud analysis on those.
         // println "${currentBuild.changeSets}, ${currentBuild.changeSets.getClass()}"
 
@@ -110,15 +111,16 @@ node() {
         }
         parallel(parallelDocker)
 
-        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet)
-        discord.sendDiscordMessage(desc, "Deploying to AKS Development to Run Postman Tests")
+        // def desc = discord.createDescription(dockerChangeSet, serviceChangeSet)
+        // discord.sendDiscordMessage(desc, "Deploying to AKS Development to Run Postman Tests")
     }
 
     stage("Deploy to AKS Test Environment") {
         sh "ls"
+        sh "kubectl config use-context ${env.development_cluster}"
         sh "helm upgrade test helm/testchart -i"
         deployStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
-        if (deployStatus == 1) {
+        if (deployStatus != 0) {
             currentBuild.result = 'FAILURE'
             error("Jenkins failed to deploy project to development AKS cluster")
         }
@@ -133,10 +135,25 @@ node() {
         // run newman tests
         def newmanResults = sh script: "newman run postman/kube_tests.json --timeout-request 1500 --global-var 'base_url=${url}:8080' -r html", 
                                returnStatus: true
-        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'newman/', reportFiles: '*.html', reportName: "Postman Tests for $BRANCH_NAME", reportTitles: "$BRANCH_NAME Postman Tests"])
-        sh "ls newman"
+        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'newman/', reportFiles: '*.html', reportName: "Postman Tests for $BRANCH_NAME", reportTitles: "$BRANCH_NAME Postman Tests"])
+        
+        if (newmanResults == 0) {
+            testStageResult = true
+        } else {
+            testStageResult = false
+        }
+    }
 
-        println serviceChangeSet
-        println dockerChangeSet
+    stage("Deployment") {
+        sh "kubectl config use-context ${env.production_cluster}"
+        sh "helm upgrade test helm/testchart -i"
+        deployExitStatus = sh script: "kubectl wait --for=condition=ready pod --all --timeout=120s", returnStatus: true
+        def productionStatus
+        if (deployExitStatus != 0) {
+            productionStatus = false
+        }
+        def discord = load("jenkins/discord.groovy")
+        def desc = discord.createDescription(dockerChangeSet, serviceChangeSet, testStageResult, deployStageResult)
+        discord.sendDiscordMessage(desc, "Leeeeeroy Jenkins!")
     }
 }
