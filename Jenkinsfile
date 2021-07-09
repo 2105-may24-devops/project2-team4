@@ -130,6 +130,6 @@ node() {
         sh "sleep 60s"
         // run newman tests
         sh script: "newman run postman/kube_tests.json --timeout-request 1500 --global-var 'base_url=${url}:8080' -r html"
-        sh "ls/newman"
+        sh "ls"
     }
 }
