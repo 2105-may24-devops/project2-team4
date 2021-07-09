@@ -49,6 +49,6 @@ stages:
           ${{ parameters.activeSvc }}.enabled=true
           kafka.enabled=true
           consul.enabled=true
-          ingress-nginx=true
+          ingress-nginx='true'
           deployAll=${{ parameters.deployAll }}
         valueFile: './helm/testchart/values.yaml'
