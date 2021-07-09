@@ -118,7 +118,7 @@ node("p1-agent") {
     stage("Deploy to AKS Test Environment") {
         sh "ls"
         sh "kubectl config use-context ${env.development_cluster}"
-        sh """helm upgrade test helm/testchart -i \
+        sh """helm upgrade deploytest helm/testchart -i \
               --set flashcard.image.name=${env.container_registry}/flashcard-service \
               --set flashcard.image.tag=${BRANCH_NAME} \
               --set quiz.image.name=${env.container_registry}/quiz-service \
