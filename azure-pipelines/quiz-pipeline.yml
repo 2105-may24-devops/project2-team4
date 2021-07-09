@@ -50,7 +50,4 @@ stages:
     containerName: team4revops
     imageName: $(service)
     tag: latest
-    helmCommand: Upgrade
-    disableSvc1: flashcard
-    activeSvc: quiz
     deployAll: 'true'
