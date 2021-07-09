@@ -48,9 +48,29 @@ spec:
             port: 
               name: {{ .portName }}
           {{- end }}
-    {{- if .Values.ingress.host }}
+  {{- if .Values.ingress.host }}
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/team4/flashcard(/|$)(.*)"
+        backend:
+          {{- with .Values.flashcard.service }}
+          service:
+            name: {{ .name }}
+            port: 
+              name: {{ .portName }}
+          {{- end }}
+      - pathType: Prefix
+        path: "/team4/quiz(/|$)(.*)"
+        backend:
+          {{- with .Values.quiz.service }}
+          service:
+            name: {{ .name }}
+            port: 
+              name: {{ .portName }}
+          {{- end }}
     {{- with .Values.ingress.host }}
     host: p2team4revopsmd.eastus.cloudapp.azure.com
     {{- end }}
-    {{- end }}
+  {{- end }}
 {{- end }}
