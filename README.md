@@ -1,3 +1,105 @@
+# Project 2: Pipeline Plethora
+
+Azure DevOps Project Link: [here](https://dev.azure.com/revature-training-uta/project2-team4)
+Original README for the original codebase at the bottom.
+
+## Project Description
+
+We created CI/CD Pipelines to deploy a microservices Spring Boot application onto Azure Kubernetes Clusters, and then monitored the cluster using Prometheus.
+
+## Technologies Used
+
+- Automation
+  - Jenkins CI
+  - Azure YAML Pipelines
+- Build
+  - Maven 
+  - Spring Boot
+- Analyze and Test
+  - Sonar Cloud
+  - Postman
+- Containerization and Orchestration
+  - Docker
+  - Kubernetes (AKS)
+  - Helm
+- Monitoring and Notifications
+  - Prometheus
+  - Grafana
+  - Discord Webhooks
+
+## Features
+
+### Implemented Features
+Azure Pipelines:
+- Successfully goes from build to deployment with any git event
+- Templated pipeline YAML files for easy maintenance
+- Deployment can specify specific versions to deploy
+
+Jenkins Pipelines:
+- Successfully goes from build to deployment with any git event
+- Dynamically identifies changed files and only builds the changed files
+
+Kubernetes and Helm Deployment
+- Improved on original codebase to simplify and improve performance and maintainability
+- Flashcard microservice supports multiple instances and persistent databases for each instance.
+- Allows for access through DNS as well as IP Address
+- Helm chart has robust values to customize the installation of the manifests
+
+Analysis and Test
+- JaCoCo Code coverage, Unit Tests and Static Analysis performed from pipelines
+
+Monitoring and Notifications
+- Prometheus and Grafana can monitor health of kubernetes resources
+- Status Alerts to Discord can notify developers of significant events like pipeline runs, deployments, and alerts from Monitoring
+
+### Planned Features
+- GitHub Actions CI/CD Pipeline
+- Helm chart could accommodate for multiple releases on the same cluster
+- Database login information can be stored as a randomized secret using helm
+- Expanded Postman Health Checks
+- Deployment strategies could be implemented into the pipeline
+- Improved workflow for Pipelines
+
+## Getting Started
+
+More information about the original codebase can be found in the [original repository](https://github.com/2105-may24-devops/project2-quiz-app). What matters from the DevOps perspective is the following:
+
+1. The Flashcard microservice requires Kafka in order to achieve eventual consistency.
+    - Kafka, in turn, requires Zookeeper
+2. The Consul service acts as service discovery for Flashcard, Quiz and Gateway, but Consul and Gateway can be replaced by Kubernetes services and ingresses
+3. Each microservice uses an application.properties file to configure its behaviour. The properties can be overwritten using environment variables when running the `.jar` file.
+
+## Usage
+
+Since the pipelines trigger on any commit or pull request in the repository, usage is extremely simple. Developers just work with the git repo, and the pipeline will be able to notify the developers of the build status, as well as deploy to the production environments if all the quality checks pass.
+
+Developers may need to specify a valid discord webhook link in order to use the discord notification features.
+
+Jenkins will need to be set up on a machine and ideally have worker agents at its disposal. Jenkins Agents will need to be supplied the credentials to access the cluster manually.
+
+The Azure Pipeline uses Service Connections to connect to the AKS cluster, and can accommodate any cluster.
+
+## Contributors
+
+- Michael Darmawan 
+- Anthony Jarvis 
+- Alex Jervis
+- Eric Tecimler
+
+## License
+
+Copyright 2021 Team4RevOps
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+The readme for the DevOps Project is also linked [here].
+Below is the original readme for the project we inherited.
+
 # Phase 5: Eventual Consistency
 
 In this phase we will leverage [Apache Kafka](https://kafka.apache.org/intro) as a message broker to achieve eventual consistency for the multiple instances of our flashcard-service. Apache Kafka will allow us to setup topics for each of our services. Each service will be both a consumer and producer, so that every instance of the service can both send and receive messages to/from other instances. In this example we will be achieving eventual consistency across instances of a single domain, but we can also achieve it cross-domain as well.
